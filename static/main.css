@@ -77,7 +77,7 @@ p {
 }
 
 .grad {
-    background-image: linear-gradient(to right, #5de0e6 , #195AFD);
+    background-image: linear-gradient(to left, #42ABEF, #3490F4, #2775F8, #195AFD);
 }
 
 .white {
