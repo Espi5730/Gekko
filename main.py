@@ -9,6 +9,14 @@ def home():
 @app.route('/about')
 def about():
     return render_template('about.html')
+    
+@app.route('/portfolio')
+def portfolio():
+    return render_template('portfolio.html')
+
+@app.route('/market')
+def market():
+    return render_template('market.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
