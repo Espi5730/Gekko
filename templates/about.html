@@ -1,8 +1,48 @@
 {% extends "header.html" %}
 {% block content %}
 <body>
-    <h1>This is a test</h1>
-    <p>This is the about page</p>
-    <img src="/static/images/200w.gif">
+    <h1>About Us</h1>
+    <div id="project-description">
+        <p>Paragraph about us as SEO and EduMarket here</p>
+    </div>
+    
+    <div class="team-container">
+        <div class="team-member">
+            <img src="../static/images/Adam.jpg" alt="Adam Abdi">
+            <h3>Adam Abdi</h3> <!-- Added name as heading under image -->
+            <p>Hey everyone, my name is Adam Abdi. I am a Management Information Systems major and Computer Science minor in Iowa State University. I am on track to graduate in May 2026 and I had a great experience working with the team.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/adamabdi" target="_blank"><i class="fa fa-linkedin"></i></a>
+                <a href="https://twitter.com/adamabdi" target="_blank"><i class="fa fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="team-member">
+            <img src="../static/images/Brice.jpg"  id="limit" alt="Brice Patchou">
+            <h3>Brice Patchou</h3>
+            <p>My name is Brice Patchou. I am a Junior studying computer science and business administration at the University of Southern California. In my free time, I like to play basketball with my friends.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/bricerenard" target="_blank"><i class="fa fa-linkedin"></i></a>
+                <a href="https://twitter.com/bricerenard" target="_blank"><i class="fa fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="team-member">
+            <img src="../static/images/Matthew.jpg" alt="Matthew Espinoza">
+            <h3>Matthew Espinoza</h3>
+            <p>Hey all, My name is Matthew Espinoza! I am a triple major at Pacific University where I study Computer Science, Data Science and Mathematics with a specialization in Acturial science. I graduate in May 2026 and I really enjoyed working with these individuals on this AI grader Project.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/matthewespinoza" target="_blank"><i class="fa fa-linkedin"></i></a>
+                <a href="https://twitter.com/matthewespinoza" target="_blank"><i class="fa fa-twitter"></i></a>
+            </div>
+        </div>
+        <div class="team-member">
+            <img src="../static/images/Nayera.jpg" alt="Nayera Hasan">
+            <h3>Nayera Hasan</h3>
+            <p>Nayera Hasan is a member of Haverford College's class of 2026, majoring in computer science. Originally from Cairo, Egypt, she is passionate about using technology to empower and reshape communities. Her interests include machine learning, natural language processing, and fintech. In her free time, she enjoys practicing yoga and playing squash.</p>
+            <div class="social-links">
+                <a href="https://linkedin.com/in/nayerahasan" target="_blank"><i class="fa fa-linkedin"></i></a>
+                <a href="https://twitter.com/nayerahasan" target="_blank"><i class="fa fa-twitter"></i></a>
+            </div>
+        </div>
+    </div>
 </body>
 {% endblock content %}

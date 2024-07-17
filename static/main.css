@@ -34,4 +34,47 @@ p {
     padding-right: 180px;
 }
 
+.team-container {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px;
+    padding: 20px;
+}
+  
+.team-member {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    width: calc(50% - 20px); 
+}
+  
+.team-member:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+  
+.team-member img {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    margin-bottom: 10px;
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+  
+.team-member h3 { 
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 0;
+}
+  
+.team-member p {
+    font-size: 0.9rem; 
+    color: #666;
+}
+
 /* id selection */
