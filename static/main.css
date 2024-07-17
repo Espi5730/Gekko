@@ -22,7 +22,7 @@ p {
 }
 
 .nav-link, .navbar-brand {
-    color: #ffffff;
+    color: #000000;
 }
 
 .navbar-brand {
@@ -79,6 +79,6 @@ p {
 
 /* id selection */
 
-#about-main {
-    background-color: #fffdfd;
+#about-header {
+    background-color: #ffffff;
 }
