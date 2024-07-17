@@ -15,8 +15,8 @@ p {
 /* class selection */
 
 .navbar {
+    margin-top: 10px;
     padding: 20px 10px;
-    background-color: #195AFD;
     height: 80px;
     margin-bottom: 40px;
 }
@@ -27,11 +27,10 @@ p {
 
 .navbar-brand {
     font-size: 1.5rem;
-    padding-left: 100px;
 }
 
 .navbar-nav {
-    padding-right: 180px;
+    align-self: right;
 }
 
 .team-container {
@@ -77,8 +76,58 @@ p {
     color: #666;
 }
 
+.grad {
+    background-image: linear-gradient(to right, #5de0e6 , #195AFD);
+}
+
+.white {
+    color:white;
+}
+
+.left {
+    text-align: left;
+}
+
+.main-block {
+ width: 80%;
+ margin: auto;
+ padding-left: 22px;
+}
+
+.container {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    height: 100vh;
+    padding: 20px;
+}
+.text-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.image-section {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.image-section img {
+    max-width: 100%;
+    height: auto;
+}
+
 /* id selection */
 
 #about-header {
-    background-color: #ffffff;
+ width: 80%;
+ margin-right: none;
+ margin: auto;
+}
+
+#white {
+    color:white;
+}
+
+#black {
+    color:black;
 }
