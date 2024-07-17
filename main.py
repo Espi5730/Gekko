@@ -131,7 +131,7 @@ def getCompanyInfo():
         # print dataframe
         # print(df.loc['date'])
 
-        
+        # graph the data
         graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
 
 
