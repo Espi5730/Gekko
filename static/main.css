@@ -99,7 +99,7 @@ p {
 .main-block {
  width: 80%;
  margin: auto;
- padding-left: 0px;
+ padding: 20px;
 }
 
 .flexbox {
@@ -107,7 +107,6 @@ p {
     justify-content: space-between;
     align-items: flex-start;
     height: auto;
-    padding: 20px;
 }
 
 .text-section {
@@ -152,6 +151,12 @@ p {
     /* background-color: white; */
 }
 
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
 /* id selection */
 
 #about-header {
@@ -180,6 +185,8 @@ p {
 #no-top{
     margin-top: 0px;
 }
+
+
 
 /* responsive stuff */
 
