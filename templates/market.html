@@ -37,11 +37,41 @@
         </div>
     </nav>
 
-    <div class="main-block">
-      <p class="left" id="black">enticing description 1</p>
-      <p class="left" id="black">enticing description 2</p>
+    <div class="flexbox container-fluid main-block">
+
+      <p class="left" id="black">What company would you like to see?</p>
+      <div class="input-container">
+        <span class="icon search" onclick="showAlert()">🔍</span>
+        <input type="text" id="searchInput" placeholder="Type to search" oninput="toggleClearButton(this)">
+        <span class="icon clear" id="clearButton" onclick="clearInput()">❌</span>
+      </div>
+      <div class="display-graph left">
+        <img src="/static/images/200w.gif">
+        <p class="footnote">placeholder image and placeholder text</p>
+      </div>
     </div>
-    
-    <img src="/static/images/200w.gif">
 </body>
+<script>
+  function clearInput() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      input.dispatchEvent(new Event('input')); 
+  }
+
+  function toggleClearButton(input) {
+      const clearButton = document.getElementById('clearButton');
+      if (input.value) {
+          clearButton.style.display = 'inline';
+      } else {
+          clearButton.style.display = 'none';
+      }
+  }
+
+  function showAlert() {
+    //we can use this to call a function later maybe?
+    const input = document.getElementById('searchInput');
+    alert('You searched for: ' + input.value);
+  }
+
+</script>
 </html>

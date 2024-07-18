@@ -285,3 +285,48 @@ p {
     }
     
 }
+
+
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    max-width: 50%;
+    width: auto;
+}
+
+.input-container input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 5px;
+}
+
+.input-container .icon {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.input-container .icon.search {
+    margin-right: 5px;
+}
+
+.icon-clear {
+    display: none;
+}
+
+.input-container input:not(:placeholder-shown) + .icon-clear {
+    display: inline;
+}
+
+.display-graph {
+    padding-top: 30px;
+    
+}
+.footnote {
+    text-align: center;
+    padding:5px;
+}
