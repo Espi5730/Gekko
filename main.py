@@ -136,19 +136,6 @@ def getCompanyInfo():
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 getCompanyInfo()
 
 # app = Flask(__name__)
