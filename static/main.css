@@ -107,7 +107,10 @@ p {
     flex-direction: column;
     justify-content: center;
     padding-right: 20px;
+    border-right: 2px solid rgb(175, 175, 175);
+    margin-right: 20px;
 }
+
 .image-section {
     display: flex;
     justify-content: right;
@@ -177,6 +180,7 @@ p {
         width: 100%;
         padding-right: 0px;
         padding-top: 10px;
+        border-right: none;
     }
 
     .image-section {
@@ -184,6 +188,7 @@ p {
         padding-left: 10px;
         padding-right: 10px;
         border-bottom: 2px white groove;
+        
     }
 
     .main-block {
