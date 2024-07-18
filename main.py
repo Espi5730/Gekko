@@ -31,5 +31,13 @@ c.execute('''
     )
 ''')
 
+#adds the stock onto a personal portfolio db
+def addDatabase(name,price,changeInPrice):
+    c.execute('''
+    INSERT INTO portfolio(name,price,changeInPrice),
+    VALUES (?,?,?)
+    ''',(name,price,changeInPrice)
+    )
+
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0")
