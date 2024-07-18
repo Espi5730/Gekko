@@ -6,11 +6,75 @@ import matplotlib.pyplot as plt
 import numpy as np
 import certifi
 import json
+import requests
+from textblob import TextBlob
+# from newspaper import Article
+# from newspaper import Config
+
+import newspaper
 
 
 
 apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
+subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 # functions
+
+# function to search for news on a company 
+def newsSearch(searchTerm):
+    search_url = "https://api.bing.microsoft.com/v7.0/news/search"
+
+    headers = {"Ocp-Apim-Subscription-Key" : subcriptionKey}
+    params  = {"q": searchTerm, "textDecorations": True, "textFormat": "HTML"}
+
+    response = requests.get(search_url, headers=headers, params=params)
+    response.raise_for_status()
+    results = response.json()
+
+    # this will get you the first url
+    # print(results['value'][0]['url'])
+
+    # a list of the news articles from the searched word
+    stories = results['value']
+
+    resultList = []
+
+    for story in stories:
+
+        resultList.append( { 'name' : story['name'], 'url' : story['url'], 'image' : story['image']['thumbnail']['contentUrl'], 'description' : story['description'], 'provider' : story['provider'][0]['name'], 'data' : story['datePublished']} )
+    
+    # print(resultList[0])
+
+    return resultList
+
+
+    # search_results = json.dumps(response.json())
+
+   
+    # pprint.pp(search_results[0])
+
+# # function to analyze the sentiment of the aritcle
+# FUCK
+# def sentimentAnalysis(url):
+
+#     # USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15'
+
+#     # config = Config()
+#     # config.browser_user_agent = USER_AGENT
+#     # config.request_timeout = 10
+
+#     # article = Article(url, config=config)
+#     article = newspaper.article('https://www.msn.com/en-us/news/technology/microsofts-ai-powered-designer-app-is-out-of-preview-mode/ar-BB1qdWBb')
+#     article.download()
+#     article.parse()
+#     article.nlp()
+
+#     text = article.summary
+#     print(article.title)
+#     blob = TextBlob(text)
+
+#     sentiment = blob.sentiment.polarity
+
+#     print(sentiment)
 
 # function specifically made to make an api call
 def stockApiCall(nameOfCompany, option):
@@ -138,6 +202,13 @@ def getCompanyInfo():
 
 
 # getCompanyInfo()
+
+# res = newsSearch("Microsoft")
+
+# url = res[1]['url']
+# print(url)
+
+
 
 app = Flask(__name__)
 
