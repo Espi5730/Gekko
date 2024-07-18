@@ -1,4 +1,5 @@
 from flask import Flask, render_template
+from openai import OpenAI
 import sqlite3
 from urllib.request import urlopen
 import pandas as pd
@@ -169,7 +170,7 @@ c.execute('''
     )
 ''')
 
-#adds the stock onto a personal portfolio db
+#adds the stock onto the personal portfolio db
 def addDatabase(name,price,changeInPrice):
     c.execute('''
     INSERT INTO portfolio(name,price,changeInPrice),
@@ -178,6 +179,7 @@ def addDatabase(name,price,changeInPrice):
     )
 
 #Setting up chatBot
+'''
 def chatBot():
     my_api_key=('OPENAI_KEY')
 
@@ -192,6 +194,28 @@ def chatBot():
     ]
  )
     print(completion.choices[0].message.content) 
+'''
+
+my_api_key=('OPENAI_KEY')
+client=OpenAI(
+    api_key=my_api_key
+)
+@app.route('/chatbot',methods=['POST'])
+def chatBot():
+    #when the frontend is implemented, it would get the user message(or question) from a POST response
+    message=request.form.get("message")
+
+    completion = client.chat.completions.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a financial advisor or stock expert that gives advice to college students who are curious about anything related to stocks or finance"},
+        #Gets the user message
+        {"role": "user", "content":message}
+    ]
+    )
+
+    return completion.choices[0].message.content
+
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0")
