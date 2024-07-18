@@ -102,6 +102,82 @@ p {
  padding: 20px;
 }
 
+.resource-item {
+    flex-direction: row; 
+    align-items: flex-start; 
+}
+
+.resource-frame {
+    height: 400px; 
+}
+
+.resource-content-box {
+    text-align: left; 
+}
+
+
+.resource-item:hover {
+    transform: translateY(-5px);
+}
+
+.resource-item a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.resource-content-box {
+    padding: 20px;
+    text-align: center; 
+}
+
+.resource-content-box h2 {
+    margin-top: 0;
+}
+
+.resource-content-box p {
+    margin: 0;
+    color: #666;
+    text-align: left; /* Changed line */
+
+}
+
+.resource-frame {
+    width: 100%; /* Changed line */
+    height: 300px; /* Changed line */
+    border: none; /* Changed line */
+    margin-bottom: 20px; /* Changed line */
+}
+
+.resources-container {
+width: 80%;
+margin: 20px auto;
+padding: 20px;
+background-color: #fff;
+border-radius: 8px;
+box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.resources-container h1 {
+text-align: center;
+margin-bottom: 40px;
+}
+
+.resource-item {
+background-color: #fff;
+border: 1px solid #ddd;
+border-radius: 8px;
+margin-bottom: 20px;
+overflow: hidden;
+transition: transform 0.3s ease;
+display: flex; 
+flex-direction: column; 
+justify-content: center; 
+align-items: center; 
+padding: 20px; 
+}
+
+
 .flexbox {
     display: flex;
     justify-content: space-between;
