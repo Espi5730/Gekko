@@ -38,18 +38,25 @@
     </nav>
 
     <div class="flexbox container-fluid main-block">
-
-      <p class="left" id="black">What company would you like to see?</p>
-      <div class="input-container">
-        <span class="icon search" onclick="showAlert()">🔍</span>
-        <input type="text" id="searchInput" placeholder="Type to search" oninput="toggleClearButton(this)">
-        <span class="icon clear" id="clearButton" onclick="clearInput()">❌</span>
+      <div class="text-section">
+        <p class="left" id="black">What company would you like to see?</p>
+        <div class="input-container">
+          <span class="icon search" onclick="showAlert()">🔍</span>
+          <input type="text" id="searchInput" placeholder="Type to search" oninput="toggleClearButton(this)">
+          <span class="icon clear" id="clearButton" onclick="clearInput()">❌</span>
+        </div>
+        <div class="display-graph left">
+          <img src="/static/images/200w.gif">
+          <p class="footnote">placeholder image and placeholder text</p>
+        </div>
       </div>
-      <div class="display-graph left">
-        <img src="/static/images/200w.gif">
-        <p class="footnote">placeholder image and placeholder text</p>
+      <div class="image-section" id="stock-display">
+        <img id="main-image" src="/static/images/possible.jpg">
       </div>
     </div>
+
+    
+
 </body>
 <script>
   function clearInput() {

@@ -96,6 +96,11 @@ p {
     text-align: left;
 }
 
+.right {
+    text-align: right;
+    align-items: right; 
+}
+
 .main-block {
  width: 80%;
  margin: auto;
@@ -104,7 +109,6 @@ p {
 
 .flexbox {
     display: flex;
-    justify-content: space-between;
     align-items: flex-start;
     height: auto;
     padding: 20px;
@@ -117,13 +121,15 @@ p {
     padding-right: 20px;
     /* border-right: 2px solid rgb(175, 175, 175); */
     margin-right: 20px;
+    width: auto;
+    
 }
 
 .image-section {
     display: flex;
-    /* max-width: 80%; */
-    justify-content: right;
+    justify-content: flex-end;
     align-items: right;
+    max-width: 50%;
 }
 
 
@@ -264,6 +270,7 @@ p {
         padding-left: 10px;
         padding-right: 10px;
         border-bottom: 2px white groove;
+        max-width: 100%;
         
     }
 
@@ -294,7 +301,6 @@ p {
     border: 1px solid #ccc;
     border-radius: 4px;
     padding: 5px;
-    max-width: 50%;
     width: auto;
 }
 
