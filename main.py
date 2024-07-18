@@ -18,5 +18,9 @@ def portfolio():
 def market():
     return render_template('market.html')
 
+@app.route('/resources')
+def learn():
+    return render_template("resources.html")
+
 if __name__ == '__main__':
     app.run(debug=True)
