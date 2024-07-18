@@ -121,9 +121,11 @@ p {
 
 .image-section {
     display: flex;
+    /* max-width: 80%; */
     justify-content: right;
     align-items: right;
 }
+
 
 .no-left {
     padding-left: 0px;
@@ -169,7 +171,7 @@ p {
 #main-image {
     max-width: 100%;
     max-height: fit-content;
-    /* height: 100vh; */
+    border-radius: 8px; /* slight border radius for rounded effect */
     width: auto;
     height: auto;
     object-fit: cover;
