@@ -91,37 +91,60 @@ p {
 .main-block {
  width: 80%;
  margin: auto;
- padding-left: 22px;
+ padding-left: 0px;
 }
 
-.container {
+.flexbox {
     display: flex;
     justify-content: space-between;
     align-items: flex-start;
-    height: 100vh;
+    height: auto;
     padding: 20px;
 }
+
 .text-section {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    padding-right: 20px;
 }
 .image-section {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    justify-content: right;
+    align-items: right;
 }
-.image-section img {
-    max-width: 100%;
-    height: auto;
+
+.no-left {
+    padding-left: 0px;
+}
+
+.get-started-btn {
+    background-color: darkblue;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.get-started-btn:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+.button{
+    padding: 5px;
+    background-color: white;
 }
 
 /* id selection */
 
 #about-header {
- width: 80%;
- margin-right: none;
- margin: auto;
+    padding-left: 0px;
+    width: 80%;
+    margin: auto;
 }
 
 #white {
@@ -130,4 +153,42 @@ p {
 
 #black {
     color:black;
+}
+
+#main-image {
+    max-width: 100%;
+    max-height: fit-content;
+    width: auto;
+    height: auto;
+}
+
+#no-top{
+    margin-top: 0px;
+}
+
+/* responsive stuff */
+
+@media (max-width: 768px) {
+    .container-fluid {
+        flex-direction: column-reverse;
+    }
+
+    .image-section, .text-section {
+        width: 100%;
+        padding-right: 0px;
+        padding-top: 10px;
+    }
+
+    .image-section {
+        padding-bottom: 30px;
+        padding-left: 10px;
+        padding-right: 10px;
+        border-bottom: 2px white groove;
+    }
+
+    .main-block {
+        margin-top: 50px;
+    }
+
+    
 }
