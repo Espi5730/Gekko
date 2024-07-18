@@ -336,3 +336,7 @@ p {
     text-align: center;
     padding:5px;
 }
+
+#full {
+    width: 100%;
+}
