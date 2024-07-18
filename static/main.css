@@ -115,7 +115,7 @@ p {
     flex-direction: column;
     justify-content: center;
     padding-right: 20px;
-    border-right: 2px solid rgb(175, 175, 175);
+    /* border-right: 2px solid rgb(175, 175, 175); */
     margin-right: 20px;
 }
 
@@ -147,7 +147,7 @@ p {
 
 .button{
     padding: 5px;
-    background-color: white;
+    /* background-color: white; */
 }
 
 /* id selection */
