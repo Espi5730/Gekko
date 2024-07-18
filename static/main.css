@@ -23,6 +23,14 @@ p {
 
 .nav-link, .navbar-brand {
     color: #000000;
+    transition: box-shadow 0.3s ease-in-out; /* transition for box-shadow */
+    display: inline-block; 
+    padding: 5px 10px;
+}
+
+.nav-link:hover, .navbar-brand:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* box-shadow on hover */
+    border-radius: 5px; /* slight border radius for rounded effect */
 }
 
 .navbar-brand {
@@ -161,8 +169,10 @@ p {
 #main-image {
     max-width: 100%;
     max-height: fit-content;
+    /* height: 100vh; */
     width: auto;
     height: auto;
+    object-fit: cover;
 }
 
 #no-top{
@@ -185,6 +195,7 @@ p {
 
     .image-section {
         padding-bottom: 30px;
+        align-items: flex-end; 
         padding-left: 10px;
         padding-right: 10px;
         border-bottom: 2px white groove;
