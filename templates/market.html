@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketMind</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="about-header">
+        <div class="container-fluid no-left">
+          <a class="navbar-brand" href="/">MarketMind</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse right" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/market">Current Market</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/portfolio">Portfolio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/resources">Learn More</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+
+    <div class="flexbox container-fluid main-block">
+      <div class="text-section" id="full">
+        <p class="left" id="black">What company would you like to see?</p>
+        <div class="input-container">
+          <span class="icon search" onclick="showAlert()">🔍</span>
+          <input type="text" id="searchInput" placeholder="Type to search" oninput="toggleClearButton(this)">
+          <span class="icon clear" id="clearButton" onclick="clearInput()">❌</span>
+        </div>
+        <div class="display-graph center">
+          <img id="full" src="/static/images/200w.gif">
+          <p class="footnote">placeholder image and placeholder text</p>
+        </div>
+      </div>
+      <div class="text-section no-right" id="full">
+        <p> A table should go here that shows the users ticket search</p>
+        <table>
+          <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+          </tr>
+          <tr class="stock">
+            <td>
+              <div class="symbol">
+                <p class="no-bottom">NVDA</p>
+                <p class="no-bottom">NVIDIA CORPORATION COM</p>
+              </div>
+            </td>
+            <td>121.09</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+          </tr>
+        </table>
+      </div>
+    </div>  
+
+</body>
+<script>
+  function clearInput() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      input.dispatchEvent(new Event('input')); 
+  }
+
+  function toggleClearButton(input) {
+      const clearButton = document.getElementById('clearButton');
+      if (input.value) {
+          clearButton.style.display = 'inline';
+      } else {
+          clearButton.style.display = 'none';
+      }
+  }
+
+  function showAlert() {
+    //we can use this to call a function later maybe?
+    const input = document.getElementById('searchInput');
+    alert('You searched for: ' + input.value);
+  }
+
+</script>
+</html>

@@ -1,7 +1,7 @@
+/* element selection */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
-    margin-top: 50px;
 }
 
 h1 {
@@ -10,4 +10,388 @@ h1 {
 
 p {
     color: #666;
+}
+
+table {
+    border: 1px solid black;
+}
+
+tr {
+    border: 1px solid black;
+    padding: 4px;
+}
+
+th {
+    border: 1px solid black;
+    padding: 4px;
+}
+
+td {
+    border: 1px solid black;
+    padding: 4px;
+    white-space: nowrap;
+    
+}
+
+
+
+/* class selection */
+
+.navbar {
+    margin-top: 10px;
+    padding: 20px 10px;
+    height: 80px;
+    margin-bottom: 40px;
+}
+
+.nav-link, .navbar-brand {
+    color: #000000;
+    transition: box-shadow 0.3s ease-in-out; /* transition for box-shadow */
+    display: inline-block; 
+    padding: 5px 10px;
+}
+
+.nav-link:hover, .navbar-brand:hover {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* box-shadow on hover */
+    border-radius: 5px; /* slight border radius for rounded effect */
+}
+
+.navbar-brand {
+    font-size: 1.5rem;
+    padding-left: 0px;
+}
+
+.navbar-nav {
+    align-self: right;
+}
+
+.team-container {
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 20px;
+    padding: 20px;
+}
+  
+.team-member {
+    border: 1px solid #ccc;
+    padding: 10px;
+    text-align: center;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    width: calc(50% - 20px); 
+}
+  
+.team-member:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+  
+.team-member img {
+    width: 100%;
+    height: auto;
+    border-radius: 0;
+    margin-bottom: 10px;
+    display: block; 
+    margin-left: auto; 
+    margin-right: auto;
+}
+  
+.team-member h3 { 
+    font-size: 1.2rem;
+    color: #333;
+    margin-top: 0;
+}
+  
+.team-member p {
+    font-size: 0.9rem; 
+    color: #666;
+}
+
+.grad {
+    background-image: linear-gradient(to left, #42ABEF, #3490F4, #2775F8, #195AFD);
+}
+
+.white {
+    color:white;
+}
+
+.left {
+    text-align: left;
+}
+
+.right {
+    text-align: right;
+    align-items: right; 
+}
+
+.main-block {
+ width: 80%;
+ margin: auto;
+ padding: 20px;
+ padding-left: 0px;
+}
+
+.flexbox {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    height: auto;
+    padding: 20px;
+    padding-left: 0px;
+}
+
+.text-section {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-right: 20px;
+    /* border-right: 2px solid rgb(175, 175, 175); */
+    margin-right: 20px;
+    width: auto;
+    
+}
+
+.image-section {
+    display: flex;
+    justify-content: flex-end;
+    align-items: right;
+    max-width: 50%;
+}
+
+
+.no-left {
+    padding-left: 0px;
+}
+
+.get-started-btn {
+    background-color: darkblue;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.get-started-btn:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+.button{
+    padding: 5px;
+    /* background-color: white; */
+}
+
+
+.resources-container {
+    width: 80%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.resources-container h1 {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.resource-item {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+    display: flex; 
+    flex-direction: column; 
+    justify-content: center; 
+    align-items: center; 
+    padding: 20px; 
+    
+}
+
+.resource-item:hover {
+    transform: translateY(-5px);
+}
+
+.resource-item a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.resource-content-box {
+    padding: 20px;
+    text-align: center; 
+}
+
+.resource-content-box h2 {
+    margin-top: 0;
+}
+
+.resource-content-box p {
+    margin: 0;
+    color: #666;
+    text-align: left; /* Changed line */
+
+}
+
+.resource-frame {
+    width: 100%; /* Changed line */
+    height: 300px; /* Changed line */
+    border: none; /* Changed line */
+    margin-bottom: 20px; /* Changed line */
+}
+
+.stock{
+    transition: background-color  0s; 
+    box-sizing: border-box;
+    color: black;
+}
+
+.stock:hover {
+    padding-right: 5px;
+    border-left: 5px solid black; /* Black, 5px solid border on hover */
+    background-color: #e0f7fa; /* Light blue color on hover */
+}
+
+/* id selection */
+
+#about-header {
+    padding-left: 0px;
+    width: 80%;
+    margin: auto;
+}
+
+#white {
+    color:white;
+}
+
+#black {
+    color:black;
+}
+
+#main-image {
+    max-width: 100%;
+    max-height: fit-content;
+    border-radius: 8px; /* slight border radius for rounded effect */
+    width: auto;
+    height: auto;
+    object-fit: cover;
+}
+
+#no-top{
+    margin-top: 0px;
+}
+
+/* responsive stuff */
+
+@media (max-width: 768px) {
+    .container-fluid {
+        flex-direction: column-reverse;
+    }
+
+    .image-section, .text-section {
+        width: 100%;
+        padding-right: 0px;
+        padding-top: 10px;
+        border-right: none;
+    }
+
+    .image-section {
+        padding-bottom: 30px;
+        align-items: flex-end; 
+        padding-left: 10px;
+        padding-right: 10px;
+        border-bottom: 2px white groove;
+        max-width: 100%;
+        
+    }
+
+    .main-block {
+        margin-top: 50px;
+    }
+
+    .resource-item {
+        flex-direction: row; 
+        align-items: flex-start; 
+    }
+
+    .resource-frame {
+        height: 400px; 
+    }
+
+    .resource-content-box {
+        text-align: left; 
+    }
+    
+}
+
+
+
+.input-container {
+    display: flex;
+    align-items: center;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 5px;
+    width: auto;
+}
+
+.input-container input {
+    border: none;
+    outline: none;
+    flex: 1;
+    padding: 5px;
+}
+
+.input-container .icon {
+    cursor: pointer;
+    padding: 5px;
+}
+
+.input-container .icon.search {
+    margin-right: 5px;
+}
+
+.icon-clear {
+    display: none;
+}
+
+.input-container input:not(:placeholder-shown) + .icon-clear {
+    display: inline;
+}
+
+.display-graph {
+    padding-top: 30px;
+    
+}
+.footnote {
+    text-align: center;
+    padding:5px;
+}
+
+#full {
+    width: 100%;
+}
+
+.no-right {
+    padding-right: 0px;
+    margin-right: 0px;
+}
+
+.symbol {
+    display: flex;
+    flex-direction: column;
+    gap: 0px; 
+}
+
+.no-bottom {
+    margin-bottom: 0px;
 }

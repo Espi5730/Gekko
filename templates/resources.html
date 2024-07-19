@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MarketMind</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg bg-body-tertiary" id="about-header">
+        <div class="container-fluid no-left">
+          <a class="navbar-brand" href="/">MarketMind</a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse right" id="navbarSupportedContent">
+            <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/">Home</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/market">Current Market</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/portfolio">Portfolio</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/resources">Learn More</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="/about">About</a>
+              </li>
+            </ul>
+          </div>
+        </div>
+    </nav>
+      <!-- Resources Section -->
+      <div class="resources-container">
+        <h1>Resources</h1>
+        <div class="resource-item">
+            <iframe src="https://www.bankrate.com/investing/ultimate-guide-virtual-trading-stock-market-simulator/" class="resource-frame"></iframe>
+            <div class="resource-content-box">
+                <h2>Example Website</h2>
+            </div>
+        </div>
+        <div class="resource-item">
+            <iframe src="https://www.bankrate.com/investing/ultimate-guide-virtual-trading-stock-market-simulator/" class="resource-frame"></iframe>
+            <div class="resource-content-box">
+                <h2>Another Example Website</h2>
+            </div>
+        </div>
+        <!-- Add more resources as needed -->
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXlAH+b7ATyYkG0e3eM7OR7C7kxM/cB9cAOzz1sY7pDnhS3X9q6CfRjSQhlg" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGhoiN6q7VQFiF55f/FRZ6pOJpwhh0f4x0SqBiuIyiKOh7Rx00f6Efp/0Qp" crossorigin="anonymous"></script>
+</body>
+</html>
