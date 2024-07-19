@@ -64,13 +64,13 @@ def newsSearch(searchTerm):
 #     # config.request_timeout = 10
 
 #     # article = Article(url, config=config)
-#     article = newspaper.article('https://www.msn.com/en-us/news/technology/microsofts-ai-powered-designer-app-is-out-of-preview-mode/ar-BB1qdWBb')
+#     article = newspaper.article(url)
 #     article.download()
 #     article.parse()
 #     article.nlp()
 
 #     text = article.summary
-#     print(article.title)
+#     print(article.summary)
 #     blob = TextBlob(text)
 
 #     sentiment = blob.sentiment.polarity
@@ -204,10 +204,12 @@ def getCompanyInfo():
 
 # getCompanyInfo()
 
-# res = newsSearch("Microsoft")
+res = newsSearch("Microsoft")
 
-# url = res[1]['url']
-# print(url)
+url = res[0]['url']
+print(url)
+
+# sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
 
 
 
