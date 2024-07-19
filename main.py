@@ -273,7 +273,7 @@ client=OpenAI(
 )
 
 #Creating a chatbot response function. Gets the message from a request form from the frontend and 
-#responds to the question 
+#responds to the user input 
 @app.route('/chatbot',methods=['POST'])
 def chatBot():
     #when the frontend is implemented, it would get the user message(or question) from a POST response
