@@ -58,6 +58,7 @@ td {
 
 .navbar-brand {
     font-size: 1.5rem;
+    padding-left: 0px;
 }
 
 .navbar-nav {
@@ -128,6 +129,7 @@ td {
  width: 80%;
  margin: auto;
  padding: 20px;
+ padding-left: 0px;
 }
 
 .flexbox {
@@ -137,6 +139,7 @@ td {
     gap: 10px;
     height: auto;
     padding: 20px;
+    padding-left: 0px;
 }
 
 .text-section {
