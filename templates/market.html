@@ -38,7 +38,7 @@
     </nav>
 
     <div class="flexbox container-fluid main-block">
-      <div class="text-section">
+      <div class="text-section" id="full">
         <p class="left" id="black">What company would you like to see?</p>
         <div class="input-container">
           <span class="icon search" onclick="showAlert()">🔍</span>
@@ -50,12 +50,31 @@
           <p class="footnote">placeholder image and placeholder text</p>
         </div>
       </div>
-      <div class="image-section" id="stock-display">
-        <img id="main-image" src="/static/images/possible.jpg">
+      <div class="text-section no-right" id="full">
+        <p> A table should go here that shows the users ticket search</p>
+        <table>
+          <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+          </tr>
+          <tr class="stock">
+            <td>
+              <div class="symbol">
+                <p class="no-bottom">NVDA</p>
+                <p class="no-bottom">NVIDIA CORPORATION COM</p>
+              </div>
+            </td>
+            <td>121.09</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+          </tr>
+        </table>
       </div>
-    </div>
-
-    
+    </div>  
 
 </body>
 <script>
