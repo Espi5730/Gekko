@@ -165,7 +165,7 @@ def graphData(independant, dependant, companyName):
 
     # axis = fig.add_subplot(1, 1, 1)
 
-    # fig, ax = plt.subplots(figsize=(10, 6))
+    fig, ax = plt.subplots(figsize=(10, 6))
 
 
     plt.rc('font', size=8)    # font size
@@ -174,19 +174,30 @@ def graphData(independant, dependant, companyName):
 
     y = np.array(dependant)
 
-    # ax.plot(x, y, marker='o')
+    # Calculate the slope
+    # Use np.polyfit to fit a line (degree=1) to the price data
+    slope, intercept = np.polyfit(range(len(y)), y, 1)
 
-    # ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+    # Set the line color based on the slope
+    line_color=''
+    if slope > 0:
+        line_color = 'green'
+    else:
+     line_color = 'red'
 
-    # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    ax.plot(x, y, color=line_color)
 
-    # plt.xticks(rotation=45, ha='right')
+    ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
 
-    # today = datetime.now()
-    # one_month_ago = today - timedelta(days=30)
-    # ax.set_xlim(one_month_ago, today)
+    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
-    plt.plot(x,y)
+    plt.xticks(rotation=45, ha='right')
+
+    today = datetime.now()
+    one_month_ago = today - timedelta(days=30)
+    ax.set_xlim(one_month_ago, today)
+
+    # plt.plot(x,y)
 
     plt.xlabel("Dates")  # add X-axis label
     plt.ylabel("Prices")  # add Y-axis label
@@ -202,7 +213,7 @@ def graphData(independant, dependant, companyName):
 
     # return fig
     # plt.show()
-    # plt.tight_layout()
+    plt.tight_layout()
     plt.savefig('static/images/new_plot.png')
 
     
