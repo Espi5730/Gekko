@@ -38,15 +38,32 @@
     </nav>
 
 
-<!-- search bar -->
+
     <div class="flexbox container-fluid main-block">
+      <!-- search bar -->
+
       <div class="text-section" id="full">
-        <p class="left" id="black">What company would you like to see?</p>
-        <div class="input-container">
-          <span class="icon search" onclick="showAlert()">🔍</span>
-          <input type="text" id="searchInput" placeholder="Type to search" oninput="toggleClearButton(this)">
-          <span class="icon clear" id="clearButton" onclick="clearInput()">❌</span>
-        </div>
+        <form method="POST" action="/market" autocomplete="off" class="text-section" id="full">
+          <div class="form-group">
+            <label class="left block" for="companyName">Type Below</label>
+            {% if form.companyName.errors %}
+            {{ form.companyName(class="form-control form-control-lg is-invalid") }}
+            <div>
+                {% for error in form.companyName.errors %}
+                <span>{{ error }}</span>
+               {% endfor %}
+            </div>
+            {% else %}
+            <div class="input-container">
+              {{ form.companyName(class="") }}
+              <div class="form-group button-group center">
+                {{ form.submit(id="input-button", class="btn") }}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </form>
+
         <div class="display-graph center">
           <img id="full" src="/static/images/200w.gif">
           <p class="footnote">placeholder image and placeholder text</p>
@@ -67,7 +84,7 @@
           <tr class="stock">
             <td>
               <div class="symbol">
-                <p class="no-bottom">NVDA</p>
+                <p class="no-bottom"> {{ word }}</p>
                 <p class="no-bottom">NVIDIA CORPORATION COM</p>
               </div>
             </td>
@@ -79,29 +96,5 @@
         </table>
       </div>
     </div>  
-
 </body>
-<script>
-  function clearInput() {
-      const input = document.getElementById('searchInput');
-      input.value = '';
-      input.dispatchEvent(new Event('input')); 
-  }
-
-  function toggleClearButton(input) {
-      const clearButton = document.getElementById('clearButton');
-      if (input.value) {
-          clearButton.style.display = 'inline';
-      } else {
-          clearButton.style.display = 'none';
-      }
-  }
-
-  function showAlert() {
-    //we can use this to call a function later maybe?
-    const input = document.getElementById('searchInput');
-    alert('You searched for: ' + input.value);
-  }
-
-</script>
 </html>

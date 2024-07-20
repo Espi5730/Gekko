@@ -1,15 +1,17 @@
-
 from flask import Flask, render_template,jsonify,request
+from flask_behind_proxy import FlaskBehindProxy
 from openai import OpenAI
-import sqlite3
 from urllib.request import urlopen
+from forms import userPrompt
+from textblob import TextBlob
+import secrets
+import sqlite3
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import certifi
 import json
 import requests
-from textblob import TextBlob
 import os
 
 # from newspaper import Article
@@ -310,6 +312,12 @@ client=OpenAI(
 
 app = Flask(__name__)
 
+key = secrets.token_hex(16)
+
+proxied = FlaskBehindProxy(app)
+
+app.config['SECRET_KEY'] = key
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -321,10 +329,54 @@ def about():
 @app.route('/portfolio')
 def portfolio():
     return render_template('portfolio.html')
+"""
+    form = userPrompt()
 
-@app.route('/market')
+    if request.method == 'POST' and form.validate_on_submit():
+        user_definition = form.getDefintion()
+        word = form.word.data
+
+        output = useChatGPT(str(user_definition),
+                            word, getDefintion(word, uid, tokenid))
+
+        form.word.data = getNewWord(word_list)
+        addDatabase(output, word)
+        return render_template('home.html', form=form,
+                               message=output[0], grade=output[1],
+                               word=form.word.data)
+
+    form.word.data = getNewWord(word_list)
+    return render_template('home.html', form=form, word=form.word.data)
+
+"""
+@app.route('/market', methods=['GET', 'POST'])
+
 def market():
-    return render_template('market.html')
+    """
+    From the bottom of my heart, I hate this code with every fiber of my being
+    I hope they use this in 300 years as a basis for a horror story
+    Caught in a loop with no ***** ending, I love CS
+    - Matthew
+    """
+    form = userPrompt()
+
+    search = ""  
+
+    if request.method == 'POST': 
+        user_definition = form.getName()
+        
+        print(user_definition)
+        if len(user_definition) > 0 :  
+           
+
+
+
+
+
+            return render_template('market.html', form=form, word=user_definition)
+    
+    return render_template('market.html', form=form,)
+    
 
 @app.route('/resources')
 def learn():
