@@ -85,7 +85,7 @@ def stockApiCall(nameOfCompany, option):
     if option == 1:
         # use api to return a list of company names that match the name 
 
-        generalSearchUrl = (f'https://financialmodelingprep.com/api/v3/search?query={nameOfCompany}&limit=10&&apikey={apiKey}')
+        generalSearchUrl = (f'https://financialmodelingprep.com/api/v3/search?query={nameOfCompany}&limit=3&&apikey={apiKey}')
         
         # turn the request into json format
 
@@ -125,6 +125,8 @@ def stockApiCall(nameOfCompany, option):
         
         return jsonOfCompanies
     
+
+
 # function to make line graph from the time and quotes of a company
 def graphData(independant, dependant, companyName):
 
@@ -296,10 +298,10 @@ client=OpenAI(
 
 # getCompanyInfo()
 
-res = newsSearch("Microsoft")
+# res = newsSearch("Microsoft")
 
-url = res[0]['url']
-print(url)
+# url = res[0]['url']
+# print(url)
 
 # sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
 
