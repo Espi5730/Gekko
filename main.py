@@ -1,4 +1,4 @@
-from flask import Flask, render_template,jsonify,request
+from flask import Flask, render_template,jsonify,request, Response
 from flask_behind_proxy import FlaskBehindProxy
 from openai import OpenAI
 from urllib.request import urlopen
@@ -13,6 +13,14 @@ import certifi
 import json
 import requests
 import os
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import io
+import matplotlib
+import PyQt5
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+import matplotlib.dates as mdates
 
 # from newspaper import Article
 # from newspaper import Config
@@ -115,7 +123,22 @@ def stockApiCall(nameOfCompany, option):
         return jsonOfCompanies
     
     elif option == 3:
-        companyHistoryPriceUrl = (f'https://financialmodelingprep.com/api/v3/historical-chart/30min/{nameOfCompany}?from=2023-09-10&to=2023-09-11&apikey={apiKey}')
+
+        # Get today's date
+        today = datetime.now()
+
+        # Calculate the date one month ago
+        one_month_ago = today - relativedelta(months=1)
+
+        # Format both dates as yyyy-mm-dd
+        today_str = today.strftime('%Y-%m-%d')
+        # print(today_str)
+        one_month_ago_str = one_month_ago.strftime('%Y-%m-%d')
+        # print(one_month_ago_str)
+
+
+
+        companyHistoryPriceUrl = (f'https://financialmodelingprep.com/api/v3/historical-chart/1hour/{nameOfCompany}?from={one_month_ago_str}&to={today_str}&apikey={apiKey}')
 
         # turn the request into json format
 
@@ -132,29 +155,59 @@ def stockApiCall(nameOfCompany, option):
 # function to make line graph from the time and quotes of a company
 def graphData(independant, dependant, companyName):
 
-    
+    matplotlib.use('qtagg')
 
-    plt.rc('font', size=4)    # font size
+    plt.clf()
+
+    # fig = Figure()
+
+    # fig.suptitle(f"{companyName}'s Quotas")
+
+    # axis = fig.add_subplot(1, 1, 1)
+
+    # fig, ax = plt.subplots(figsize=(10, 6))
+
+
+    plt.rc('font', size=8)    # font size
 
     x = np.array(independant)
 
     y = np.array(dependant)
 
+    # ax.plot(x, y, marker='o')
+
+    # ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+
+    # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+
+    # plt.xticks(rotation=45, ha='right')
+
+    # today = datetime.now()
+    # one_month_ago = today - timedelta(days=30)
+    # ax.set_xlim(one_month_ago, today)
+
     plt.plot(x,y)
 
     plt.xlabel("Dates")  # add X-axis label
-    plt.ylabel("Price")  # add Y-axis label
+    plt.ylabel("Prices")  # add Y-axis label
     plt.title(f"{companyName}'s prices")  # add title
    
 
-    plt.show()
+    # plt.show()
+
+    # axis.set_xlabel("Dates")
+    # axis.set_ylabel("Prices")
+
+    # axis.plot(x, y)
+
+    # return fig
+    # plt.show()
+    # plt.tight_layout()
+    plt.savefig('static/images/new_plot.png')
 
     
 # function to find stock information on comapny
-def getCompanyInfo():
-
-    # ask user what company they want to see
-    nameOfCompany = str(input("What is the name of the company you want to look up?\n"))
+def getCompanyInfo(nameOfCompany):
 
     jsonOfCompanies = stockApiCall(nameOfCompany, 1)
 
@@ -206,6 +259,23 @@ def getCompanyInfo():
 
         # graph the data
         graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
+
+# a function to return a graph to a page based on the word that was searched
+def name_to_graph(companySymbol):
+    quoteJson = stockApiCall(companySymbol, 3)
+
+    df = pd.json_normalize(quoteJson)
+
+    # Convert the date column to datetime format
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Extract only the date part
+    df['date'] = df['date'].dt.date
+
+    print(df['date'].tail(5))
+
+
+    graphData(df['date'],df['open'], companySymbol)
 
 #Setting up the database
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
@@ -318,6 +388,14 @@ proxied = FlaskBehindProxy(app)
 
 app.config['SECRET_KEY'] = key
 
+# @app.route('/plot.png')
+# def plot_png(symbol):
+#     fig = name_to_graph(symbol)
+#     output = io.BytesIO()
+#     FigureCanvas(fig).print_png(output)
+#     return Response(output.getvalue(), mimetype='image/png')
+
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -363,17 +441,17 @@ def market():
     search = ""  
 
     if request.method == 'POST': 
-        user_definition = form.getName()
+        user_requested_company = form.getName()
         
-        print(user_definition)
-        if len(user_definition) > 0 :  
-           
+        print(user_requested_company)
+        if len(user_requested_company) > 0 :  
+            name_to_graph(user_requested_company)
 
 
 
 
 
-            return render_template('market.html', form=form, word=user_definition)
+            return render_template('market.html', form=form, word=user_requested_company, url = "../static/images/new_plot.png")
     
     return render_template('market.html', form=form,)
     
