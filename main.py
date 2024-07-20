@@ -1,4 +1,5 @@
-from flask import Flask, render_template
+
+from flask import Flask, render_template,jsonify,request
 from openai import OpenAI
 import sqlite3
 from urllib.request import urlopen
@@ -9,6 +10,8 @@ import certifi
 import json
 import requests
 from textblob import TextBlob
+import os
+
 # from newspaper import Article
 # from newspaper import Config
 
@@ -200,37 +203,6 @@ def getCompanyInfo():
         # graph the data
         graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
 
-
-
-# getCompanyInfo()
-
-res = newsSearch("Microsoft")
-
-url = res[0]['url']
-print(url)
-
-# sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
-
-
-
-app = Flask(__name__)
-
-@app.route('/')
-def home():
-    return render_template('index.html')
-
-@app.route('/about')
-def about():
-    return render_template('about.html')
-    
-@app.route('/portfolio')
-def portfolio():
-    return render_template('portfolio.html')
-
-@app.route('/market')
-def market():
-    return render_template('market.html')
-
 #Setting up the database
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
 c=conn.cursor()
@@ -276,21 +248,94 @@ client=OpenAI(
 
 #Creating a chatbot response function. Gets the message from a request form from the frontend and 
 #responds to the user input 
-@app.route('/chatbot',methods=['POST'])
-def chatBot():
-    #when the frontend is implemented, it would get the user message(or question) from a POST response
-    message=request.form.get("message")
+# @app.route('/chatbot',methods=['POST'])
+# def chatBot():
+#     #when the frontend is implemented, it would get the user message(or question) from a POST response
+#     message=request.form.get("message")
 
-    completion = client.chat.completions.create(
-    model="gpt-3.5-turbo",
-    messages=[
-        {"role": "system", "content": "You are a financial advisor or stock expert that gives advice to college students who are curious about anything related to stocks or finance"},
-        #Gets the user message
-        {"role": "user", "content":message}
-    ]
-    )
+#     completion = client.chat.completions.create(
+#     model="gpt-3.5-turbo",
+#     messages=[
+#         {"role": "system", "content": "You are a financial advisor or stock expert that gives advice to college students who are curious about anything related to stocks or finance"},
+#         #Gets the user message
+#         {"role": "user", "content":message}
+#     ]
+#     )
 
-    return completion.choices[0].message.content
+#     return completion.choices[0].message.content
+  
+
+#Creating a chatbot response function. Gets the message from a request form from the frontend and 
+#responds to the user input 
+
+# @app.route('/chatbot', methods=['POST'])
+# def chatBot():
+#     my_api_key = os.getenv('OPENAI_KEY')
+
+#     client = OpenAI(
+#         api_key=my_api_key,
+#     )
+
+#     try:
+#             message = request.form.get("message")
+#             print(f"Received message: {message}")  # Debugging statement
+
+#             # Create a chat completion
+#             completion = client.chat.completions.create(model="gpt-3.5-turbo",
+#             messages=[
+#                 {"role": "user", "content": message}
+#             ])
+
+#             ai_response = completion.choices[0].message.content.strip()
+#             print(f"AI Response: {ai_response}")  # Debugging statement
+
+#             return jsonify({"response": ai_response})
+#     except Exception as e:
+#             print(f"Error: {e}")
+#             return jsonify({"response": "Sorry, I didn't understand that."})
+
+# getCompanyInfo()
+
+res = newsSearch("Microsoft")
+
+url = res[0]['url']
+print(url)
+
+# sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
+
+
+
+
+app = Flask(__name__)
+
+@app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/about')
+def about():
+    return render_template('about.html')
+
+@app.route('/portfolio')
+def portfolio():
+    return render_template('portfolio.html')
+
+@app.route('/market')
+def market():
+    return render_template('market.html')
+
+@app.route('/resources')
+def learn():
+    return render_template("resources.html")
+
+
+
+
+
+
+
+
+
 
 
 if __name__ == '__main__':

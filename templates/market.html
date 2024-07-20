@@ -27,6 +27,9 @@
                 <a class="nav-link" href="/portfolio">Portfolio</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" href="/resources">Learn More</a>
+              </li>
+              <li class="nav-item">
                 <a class="nav-link" href="/about">About</a>
               </li>
             </ul>
@@ -34,11 +37,67 @@
         </div>
     </nav>
 
-    <div class="main-block">
-      <p class="left" id="black">enticing description 1</p>
-      <p class="left" id="black">enticing description 2</p>
-    </div>
-    
-    <img src="/static/images/200w.gif">
+    <div class="flexbox container-fluid main-block">
+      <div class="text-section" id="full">
+        <p class="left" id="black">What company would you like to see?</p>
+        <div class="input-container">
+          <span class="icon search" onclick="showAlert()">🔍</span>
+          <input type="text" id="searchInput" placeholder="Type to search" oninput="toggleClearButton(this)">
+          <span class="icon clear" id="clearButton" onclick="clearInput()">❌</span>
+        </div>
+        <div class="display-graph center">
+          <img id="full" src="/static/images/200w.gif">
+          <p class="footnote">placeholder image and placeholder text</p>
+        </div>
+      </div>
+      <div class="text-section no-right" id="full">
+        <p> A table should go here that shows the users ticket search</p>
+        <table>
+          <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+          </tr>
+          <tr class="stock">
+            <td>
+              <div class="symbol">
+                <p class="no-bottom">NVDA</p>
+                <p class="no-bottom">NVIDIA CORPORATION COM</p>
+              </div>
+            </td>
+            <td>121.09</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+          </tr>
+        </table>
+      </div>
+    </div>  
+
 </body>
+<script>
+  function clearInput() {
+      const input = document.getElementById('searchInput');
+      input.value = '';
+      input.dispatchEvent(new Event('input')); 
+  }
+
+  function toggleClearButton(input) {
+      const clearButton = document.getElementById('clearButton');
+      if (input.value) {
+          clearButton.style.display = 'inline';
+      } else {
+          clearButton.style.display = 'none';
+      }
+  }
+
+  function showAlert() {
+    //we can use this to call a function later maybe?
+    const input = document.getElementById('searchInput');
+    alert('You searched for: ' + input.value);
+  }
+
+</script>
 </html>
