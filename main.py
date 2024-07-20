@@ -23,7 +23,7 @@ def learn():
     return render_template("resources.html")
 
 @app.route('/news')
-def learn():
+def news():
     return render_template("news.html")
     
 if __name__ == '__main__':
