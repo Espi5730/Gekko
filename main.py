@@ -176,7 +176,7 @@ def stockApiCall(nameOfCompany, option):
 
 
 # function to make line graph from the time and quotes of a company
-def graphData(independant, dependant, companyName, prices):
+def graphData(independant, dependant, symbolName, prices, companyName):
 
     # print(f"PRICES ARE {prices}")
     matplotlib.use('qtagg')
@@ -301,6 +301,12 @@ def name_to_graph(companySymbol):
 
     changeInPrice = getPriceChange(companySymbol)
 
+    profileJson = stockApiCall(companySymbol, 1)
+    
+    profileDF = pd.json_normalize(profileJson)
+
+    # print(profileDF)
+
     prices = pd.json_normalize(changeInPrice)
 
     df = pd.json_normalize(quoteJson)
@@ -313,8 +319,9 @@ def name_to_graph(companySymbol):
 
     # print(df['date'].tail(5))
 
-
-    graphData(df['date'],df['open'], companySymbol, prices)
+    companyName = profileDF['name'][0]
+    print(f"NAME IS {companyName}")
+    graphData(df['date'],df['open'], companySymbol, prices, companyName)
 
 #Setting up the database
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
