@@ -33,6 +33,18 @@ apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 # functions
 
+# function to get all company names
+def getAllCompanies():
+    companySearchUrl = (f'https://financialmodelingprep.com/api/v3/stock/list?apikey={apiKey}')
+        
+    response = urlopen(companySearchUrl, cafile=certifi.where())
+    
+    data = response.read().decode("utf-8")
+    
+    jsonOfCompanies = json.loads(data)
+    
+    return jsonOfCompanies
+
 # function to search for news on a company 
 def newsSearch(searchTerm):
     search_url = "https://api.bing.microsoft.com/v7.0/news/search"
@@ -451,6 +463,24 @@ def market():
 
     search = ""  
 
+    # autocomplete?
+
+    # jsonOfCompanies = getAllCompanies()
+
+    # print(jsonOfCompanies[0]['name'])
+
+    # listOfCompanies = {}
+
+    # for companyDict in jsonOfCompanies:
+       
+    #     resultName = companyDict['name']
+    #     if resultName not in listOfCompanies:
+    #         listOfCompanies[resultName] = companyDict['symbol']
+
+    # # print(listOfCompanies["Perth Mint Gold"])
+
+    # data = listOfCompanies.items()
+
     if request.method == 'POST': 
         user_requested_company = form.getName()
         
@@ -460,7 +490,7 @@ def market():
 
 
 
-
+            
 
             return render_template('market.html', form=form, word=user_requested_company, url = "../static/images/new_plot.png")
     

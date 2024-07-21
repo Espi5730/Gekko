@@ -56,6 +56,11 @@
             {% else %}
             <div class="input-container">
               {{ form.companyName(class="") }}
+              <!-- <datalist style="height:5.1em;overflow:hidden;">
+                {% for name, symbol in data%}
+                  <option lable ="{{name}}, {{symbol}}" value={{symbol}}></option>
+                {% endfor %}
+              </datalist> -->
               <div class="form-group button-group center">
                 {{ form.submit(id="input-button", class="btn") }}
               </div>
