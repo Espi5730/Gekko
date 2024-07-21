@@ -32,6 +32,17 @@ import newspaper
 apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 # functions
+# function to get price change
+def getPriceChange(stockSymbol):
+    companyPriceURL = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{stockSymbol}?apikey={apiKey}")
+
+    response = urlopen(companyPriceURL, cafile=certifi.where())
+    
+    data = response.read().decode("utf-8")
+    
+    jsonOfCompanies = json.loads(data)
+    
+    return jsonOfCompanies
 
 # function to get all company names
 def getAllCompanies():
@@ -165,8 +176,9 @@ def stockApiCall(nameOfCompany, option):
 
 
 # function to make line graph from the time and quotes of a company
-def graphData(independant, dependant, companyName):
+def graphData(independant, dependant, companyName, prices):
 
+    # print(f"PRICES ARE {prices}")
     matplotlib.use('qtagg')
 
     plt.clf()
@@ -188,11 +200,11 @@ def graphData(independant, dependant, companyName):
 
     # Calculate the slope
     # Use np.polyfit to fit a line (degree=1) to the price data
-    slope, intercept = np.polyfit(range(len(y)), y, 1)
-
+    # slope, intercept = np.polyfit(range(len(y)), y, 1)
+    currPriceChange = float(prices['1M'])
     # Set the line color based on the slope
     line_color=''
-    if slope > 0:
+    if currPriceChange > 0:
         line_color = 'green'
     else:
      line_color = 'red'
@@ -287,6 +299,10 @@ def getCompanyInfo(nameOfCompany):
 def name_to_graph(companySymbol):
     quoteJson = stockApiCall(companySymbol, 3)
 
+    changeInPrice = getPriceChange(companySymbol)
+
+    prices = pd.json_normalize(changeInPrice)
+
     df = pd.json_normalize(quoteJson)
 
     # Convert the date column to datetime format
@@ -295,10 +311,10 @@ def name_to_graph(companySymbol):
     # Extract only the date part
     df['date'] = df['date'].dt.date
 
-    print(df['date'].tail(5))
+    # print(df['date'].tail(5))
 
 
-    graphData(df['date'],df['open'], companySymbol)
+    graphData(df['date'],df['open'], companySymbol, prices)
 
 #Setting up the database
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
