@@ -1,7 +1,9 @@
 /* element selection */
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Poppins";
+
     text-align: center;
+
 }
 
 h1 {
@@ -44,12 +46,23 @@ td {
     margin-bottom: 40px;
 }
 
+.market-mind-link{
+    font-family: 'Times New Roman', Times, serif;
+    display: inline-block; 
+    font-size: 1.5rem;
+    text-decoration: none;
+}
+
+
 .nav-link, .navbar-brand {
     color: #000000;
     transition: box-shadow 0.3s ease-in-out; /* transition for box-shadow */
     display: inline-block; 
-    padding: 5px 10px;
+    /* padding-left: 10px;
+    padding-right: 10px; */
+    font-family: "Poppins";
 }
+
 
 .nav-link:hover, .navbar-brand:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* box-shadow on hover */
@@ -112,6 +125,11 @@ td {
     background-image: linear-gradient(to left, #42ABEF, #3490F4, #2775F8, #195AFD);
 }
 
+.grad-other{
+    background: linear-gradient(to right, #ebf1fe , #e6edfe, #e2ecfd);
+    /* background-color: #f2f2f2; */
+}
+
 .white {
     color:white;
 }
@@ -119,6 +137,19 @@ td {
 .left {
     text-align: left;
 }
+
+
+.landingPageTitle {
+    font-weight: bold;
+    font-size: 60px;
+    font-family: "Poppins";
+    line-height: 60px;
+}
+
+.landingPageDesc {
+    /* font-size: 20px; */
+    font-family: "Poppins";
+    /* line-height: 20px; */
 
 .right {
     text-align: right;
@@ -130,7 +161,10 @@ td {
  margin: auto;
  padding: 20px;
  padding-left: 0px;
+ padding-top: 5%;
+
 }
+
 
 .flexbox {
     display: flex;
@@ -149,7 +183,10 @@ td {
     padding-right: 20px;
     /* border-right: 2px solid rgb(175, 175, 175); */
     margin-right: 20px;
-    width: auto;
+
+/*check: to see if this makes our current marketplace bug    */
+/*     width: auto; */
+
     
 }
 
@@ -280,7 +317,7 @@ td {
 #main-image {
     max-width: 100%;
     max-height: fit-content;
-    border-radius: 8px; /* slight border radius for rounded effect */
+    border-radius: 10px; /* slight border radius for rounded effect */
     width: auto;
     height: auto;
     object-fit: cover;
@@ -405,6 +442,40 @@ td {
     border: 1px solid #ccc;
 }
 
+
+.resource-frame {
+    width: 100%; /* Changed line */
+    height: 300px; /* Changed line */
+    border: none; /* Changed line */
+    margin-bottom: 20px; /* Changed line */
+}
+
+.black{
+    color: #000000;
+}
+
+.article {
+    margin-bottom: 20px;
+}
+
+.article h2 {
+    font-size: 1.25rem;
+}
+
+.article img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.article p {
+    font-size: 0.9rem;
+}
+
+.page_indicator{
+    color: #195AFD;
+}
+
 #chat-container {
     margin-top: 10px;
     border: 1px solid #ccc;
@@ -451,3 +522,4 @@ td {
     background-color: #42ABEF;
     color: white;
 }
+
