@@ -1,12 +1,17 @@
 from flask import Flask, render_template, request, jsonify
-import requests
-import re
 from flask import Flask, render_template,jsonify,request, Response
 from flask_behind_proxy import FlaskBehindProxy
 from openai import OpenAI
 from urllib.request import urlopen
 from forms import userPrompt
 from textblob import TextBlob
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+from plotly.subplots import make_subplots
+import requests
+import re
 import secrets
 import sqlite3
 import pandas as pd
@@ -16,18 +21,12 @@ import certifi
 import json
 import requests
 import os
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
 import io
 import matplotlib
 import PyQt5
-from datetime import datetime, timedelta
-from dateutil.relativedelta import relativedelta
 import matplotlib.dates as mdates
-from plotly.subplots import make_subplots
 import plotly.graph_objs as go
 
-app = Flask(__name__)
 
 apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
@@ -133,7 +132,7 @@ def getAllCompanies():
     # pprint.pp(search_results[0])
 
 # # function to analyze the sentiment of the aritcle
-# FUCK
+
 # def sentimentAnalysis(url):
 
 #     # USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15'
@@ -327,6 +326,10 @@ def getCompanyInfo(nameOfCompany):
 
     # list of companies that match what the user wanted 
     print(listOfCompanies)
+    first_key = list(listOfCompanies)[0]
+    first_val = list(listOfCompanies.values())[0]
+    print(first_key)
+    print(first_val)
 
     # now we are going to have the user choose what they wanted out of the list
     
@@ -334,10 +337,9 @@ def getCompanyInfo(nameOfCompany):
 
     if nameOfCompany not in listOfCompanies:
         # edge case if the user picks something random
-
         print("bruh lock in")
-
-        return
+        returnVal = ["", "", ""]
+        return returnVal
     else:
 
         # print(listOfCompanies[nameOfCompany])
@@ -351,6 +353,12 @@ def getCompanyInfo(nameOfCompany):
         # we got the price of the company using it's symbol
         print(f'the price of {companySymbol} is {currentPrice}')
 
+        returnVal = [companySymbol, first_key, currentPrice]
+
+        return returnVal
+
+        
+        """
         # retreiving quote from a certain time
         quoteJson = stockApiCall(companySymbol, 3)
 
@@ -363,6 +371,7 @@ def getCompanyInfo(nameOfCompany):
 
         # graph the data
         graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
+        """
 
 # a function to return a graph to a page based on the word that was searched
 def name_to_graph(companySymbol):
@@ -493,16 +502,11 @@ client=OpenAI(
 
 # sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
 
-#random comment
-
-
+#Set up flask
 
 app = Flask(__name__)
-
 key = secrets.token_hex(16)
-
 proxied = FlaskBehindProxy(app)
-
 app.config['SECRET_KEY'] = key
 
 # @app.route('/plot.png')
@@ -522,74 +526,40 @@ def home():
 def about():
     return render_template('about.html')
 
+
+
 @app.route('/portfolio')
 def portfolio():
+
+
     return render_template('portfolio.html')
-"""
-    form = userPrompt()
 
-    if request.method == 'POST' and form.validate_on_submit():
-        user_definition = form.getDefintion()
-        word = form.word.data
-
-        output = useChatGPT(str(user_definition),
-                            word, getDefintion(word, uid, tokenid))
-
-        form.word.data = getNewWord(word_list)
-        addDatabase(output, word)
-        return render_template('home.html', form=form,
-                               message=output[0], grade=output[1],
-                               word=form.word.data)
-
-    form.word.data = getNewWord(word_list)
-    return render_template('home.html', form=form, word=form.word.data)
-
-"""
 @app.route('/market', methods=['GET', 'POST'])
-
 def market():
-    """
-    From the bottom of my heart, I hate this code with every fiber of my being
-    I hope they use this in 300 years as a basis for a horror story
-    Caught in a loop with no ***** ending, I love CS
-    - Matthew
-    """
     form = userPrompt()
-
     search = ""  
 
-    # autocomplete?
-
-    # jsonOfCompanies = getAllCompanies()
-
-    # print(jsonOfCompanies[0]['name'])
-
-    # listOfCompanies = {}
-
-    # for companyDict in jsonOfCompanies:
-       
-    #     resultName = companyDict['name']
-    #     if resultName not in listOfCompanies:
-    #         listOfCompanies[resultName] = companyDict['symbol']
-
-    # # print(listOfCompanies["Perth Mint Gold"])
-
-    # data = listOfCompanies.items()
-
     if request.method == 'POST': 
-        user_requested_company = form.getName()
-        
-        # print(user_requested_company)
-        if len(user_requested_company) > 0 :  
-            plot_html = name_to_graph(user_requested_company)
-            # url = "../static/images/new_plot.png"
-            
+        user_definition = form.getName()
 
-            
+        #if add portfolio clicked 
+        print(user_definition)
+        if len(user_definition) > 0 : 
+            #api requests
 
-            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html)
-    
-    return render_template('market.html', form=form,)
+            data = getCompanyInfo(user_definition)
+
+
+            print(data)
+            #show graph (brice)
+
+
+            #display api results on page
+            return render_template('market.html', form=form, ticket=data[0], name=data[1], value=data[2])
+
+        #if add portfolio clicked 
+
+    return render_template('market.html', form=form)
     
 
 @app.route('/resources')
