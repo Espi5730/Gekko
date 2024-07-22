@@ -17,7 +17,7 @@ def newsSearch(searchTerm):
         "textDecorations": True,
         "textFormat": "HTML",
         "mkt": "en-US",
-        "count": 20  # Increase count to get more results and filter later
+        "count": 20  # to get more results and filter later
     }
 
     response = requests.get(search_url, headers=headers, params=params)
@@ -32,7 +32,7 @@ def newsSearch(searchTerm):
     resultList = []
     for story in stories:
         image_url = story.get('image', {}).get('thumbnail', {}).get('contentUrl', '')
-        # Check for a larger image URL if available in the API response
+        # if a larger image URL is available in the API response so we can get a better quality photo
         if 'contentUrl' in story.get('image', {}):
             image_url = story['image']['contentUrl']
         resultList.append({
