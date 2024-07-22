@@ -1,3 +1,6 @@
+from flask import Flask, render_template, request, jsonify
+import requests
+import re
 from flask import Flask, render_template,jsonify,request, Response
 from flask_behind_proxy import FlaskBehindProxy
 from openai import OpenAI
@@ -24,16 +27,54 @@ import matplotlib.dates as mdates
 from plotly.subplots import make_subplots
 import plotly.graph_objs as go
 
-# from newspaper import Article
-# from newspaper import Config
+app = Flask(__name__)
 
-import newspaper
+apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
+subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
+# apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
+# subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 
-
-
-apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
-subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 # functions
+# function to get news
+def newsSearch(searchTerm):
+    search_url = "https://api.bing.microsoft.com/v7.0/news/search"
+    headers = {"Ocp-Apim-Subscription-Key": subscriptionKey}
+    params = {
+        "q": f"{searchTerm} stock market finance",
+        "textDecorations": True,
+        "textFormat": "HTML",
+        "mkt": "en-US",
+        "count": 20  # to get more results and filter later
+    }
+
+    response = requests.get(search_url, headers=headers, params=params)
+    response.raise_for_status()
+    results = response.json()
+    stories = results['value']
+
+    def strip_html_tags(text):
+        clean = re.compile('<.*?>')
+        return re.sub(clean, '', text)
+
+    resultList = []
+    for story in stories:
+        image_url = story.get('image', {}).get('thumbnail', {}).get('contentUrl', '')
+        # if a larger image URL is available in the API response so we can get a better quality photo
+        if 'contentUrl' in story.get('image', {}):
+            image_url = story['image']['contentUrl']
+        resultList.append({
+            'name': story['name'],
+            'url': story['url'],
+            'image': image_url,
+            'description': strip_html_tags(story['description']),
+            'provider': story['provider'][0]['name'],
+            'date': story['datePublished']
+        })
+
+    return resultList
+
+
+
 # function to get price change
 def getPriceChange(stockSymbol):
     companyPriceURL = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{stockSymbol}?apikey={apiKey}")
@@ -59,31 +100,31 @@ def getAllCompanies():
     return jsonOfCompanies
 
 # function to search for news on a company 
-def newsSearch(searchTerm):
-    search_url = "https://api.bing.microsoft.com/v7.0/news/search"
+# def newsSearch(searchTerm):
+#     search_url = "https://api.bing.microsoft.com/v7.0/news/search"
 
-    headers = {"Ocp-Apim-Subscription-Key" : subcriptionKey}
-    params  = {"q": searchTerm, "textDecorations": True, "textFormat": "HTML"}
+#     headers = {"Ocp-Apim-Subscription-Key" : subcriptionKey}
+#     params  = {"q": searchTerm, "textDecorations": True, "textFormat": "HTML"}
 
-    response = requests.get(search_url, headers=headers, params=params)
-    response.raise_for_status()
-    results = response.json()
+#     response = requests.get(search_url, headers=headers, params=params)
+#     response.raise_for_status()
+#     results = response.json()
 
-    # this will get you the first url
-    # print(results['value'][0]['url'])
+#     # this will get you the first url
+#     # print(results['value'][0]['url'])
 
-    # a list of the news articles from the searched word
-    stories = results['value']
+#     # a list of the news articles from the searched word
+#     stories = results['value']
 
-    resultList = []
+#     resultList = []
 
-    for story in stories:
+#     for story in stories:
 
-        resultList.append( { 'name' : story['name'], 'url' : story['url'], 'image' : story['image']['thumbnail']['contentUrl'], 'description' : story['description'], 'provider' : story['provider'][0]['name'], 'data' : story['datePublished']} )
+#         resultList.append( { 'name' : story['name'], 'url' : story['url'], 'image' : story['image']['thumbnail']['contentUrl'], 'description' : story['description'], 'provider' : story['provider'][0]['name'], 'data' : story['datePublished']} )
     
-    # print(resultList[0])
+#     # print(resultList[0])
 
-    return resultList
+#     return resultList
 
 
     # search_results = json.dumps(response.json())
@@ -471,6 +512,7 @@ app.config['SECRET_KEY'] = key
 #     return Response(output.getvalue(), mimetype='image/png')
 
 
+
 @app.route('/')
 def home():
     return render_template('index.html')
@@ -554,11 +596,19 @@ def learn():
     return render_template("resources.html")
 
 
+@app.route('/news')
+def news():
+    return render_template('news.html')
 
-
-
-
-
+@app.route('/get_news', methods=['GET'])
+def get_news():
+    company = request.args.get('company')
+    news_data = newsSearch(company)
+    articles = [
+        {"name": article['name'], "url": article['url'], "image": article['image'], "description": article['description']}
+        for article in news_data
+    ]
+    return jsonify(articles)
 
 
 
