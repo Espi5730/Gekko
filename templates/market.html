@@ -40,11 +40,77 @@
         </div>
     </nav>
 
-    <div class="main-block ">
-      <p class="left" id="black">enticing description 1</p>
-      <p class="left" id="black">enticing description 2</p>
-    </div>
-    
-    <img src="/static/images/200w.gif">
+
+   
+
+
+    <div class="flexbox container-fluid main-block">
+      <!-- search bar -->
+
+      <div class="text-section" id="full">
+        <form method="POST" action="/market" autocomplete="off" class="text-section" id="full">
+          <div class="form-group">
+            <label class="left block" for="companyName">Type Below</label>
+            {% if form.companyName.errors %}
+            {{ form.companyName(class="form-control form-control-lg is-invalid") }}
+            <div>
+                {% for error in form.companyName.errors %}
+                <span>{{ error }}</span>
+               {% endfor %}
+            </div>
+            {% else %}
+            <div class="input-container">
+              {{ form.companyName(class="") }}
+              <!-- <datalist style="height:5.1em;overflow:hidden;">
+                {% for name, symbol in data%}
+                  <option lable ="{{name}}, {{symbol}}" value={{symbol}}></option>
+                {% endfor %}
+              </datalist> -->
+              <div class="form-group button-group center">
+                {{ form.submit(id="input-button", class="btn") }}
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </form>
+
+        <div class="display-graph center">
+          {% if plot_html %}
+            <!-- <img id="full" src={{url}} alt="my plot"> -->
+            {{ plot_html | safe }}
+          {% else %}
+            <img id="full" src="../static/images/200w.gif" alt="my plot">
+          {% endif %}
+          <p class="footnote">placeholder image and placeholder text</p>
+        </div>
+      </div>
+
+      <!-- table -->
+      <div class="text-section no-right" id="full">
+        <p> A table should go here that shows the users ticket search</p>
+        <table>
+          <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+            <th>Other Data</th>
+          </tr>
+          <tr class="stock">
+            <td>
+              <div class="symbol">
+                <p class="no-bottom"> {{ word }}</p>
+                <p class="no-bottom">NVIDIA CORPORATION COM</p>
+              </div>
+            </td>
+            <td>121.09</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+            <td>ticket Data</td>
+          </tr>
+        </table>
+      </div>
+    </div>  
+
 </body>
 </html>
