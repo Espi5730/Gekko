@@ -100,7 +100,7 @@ def stockApiCall(nameOfCompany, option):
         
         return jsonOfCompanies
     
-
+# hi
 
 # function to make line graph from the time and quotes of a company
 def graphData(independant, dependant, symbolName, prices, companyName):
