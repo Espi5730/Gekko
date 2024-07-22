@@ -269,7 +269,7 @@ def graphData(independant, dependant, symbolName, prices, companyName):
         dtick=86400000.0 * 2  # Tick every other day
     )
     fig.update_yaxes(title_text="Prices")
-    fig.update_layout(title=f"{companyName}'s Prices", margin=dict(l=0, r=0, t=30, b=0))
+    fig.update_layout(title=f"{companyName}'s Prices", margin=dict(l=0, r=0, t=30, b=0), paper_bgcolor='rgba(235, 241, 254, 0.3)')
 
     # ax.plot(x, y, color=line_color)
 

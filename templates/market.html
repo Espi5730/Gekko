@@ -50,7 +50,7 @@
       <div class="text-section" id="full">
         <form method="POST" action="/market" autocomplete="off" class="text-section" id="full">
           <div class="form-group">
-            <label class="left block" for="companyName">Type Below</label>
+            <label class="left block" for="companyName">Enter Company Stock Symbol</label>
             {% if form.companyName.errors %}
             {{ form.companyName(class="form-control form-control-lg is-invalid") }}
             <div>
@@ -79,9 +79,9 @@
             <!-- <img id="full" src={{url}} alt="my plot"> -->
             {{ plot_html | safe }}
           {% else %}
-            <img id="full" src="../static/images/200w.gif" alt="my plot">
+            <img id="full" src="../static/images/200w.gif" alt="my plot" style="display: none;">
           {% endif %}
-          <p class="footnote">placeholder image and placeholder text</p>
+          <!-- <p class="footnote">placeholder image and placeholder text</p> -->
         </div>
       </div>
 
