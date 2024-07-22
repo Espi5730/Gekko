@@ -70,8 +70,9 @@
         </form>
 
         <div class="display-graph center">
-          {% if url %}
-            <img id="full" src={{url}} alt="my plot">
+          {% if plot_html %}
+            <!-- <img id="full" src={{url}} alt="my plot"> -->
+            {{ plot_html | safe }}
           {% else %}
             <img id="full" src="../static/images/200w.gif" alt="my plot">
           {% endif %}

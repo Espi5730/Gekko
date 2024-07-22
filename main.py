@@ -21,6 +21,8 @@ import PyQt5
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 import matplotlib.dates as mdates
+from plotly.subplots import make_subplots
+import plotly.graph_objs as go
 
 # from newspaper import Article
 # from newspaper import Config
@@ -189,7 +191,7 @@ def graphData(independant, dependant, symbolName, prices, companyName):
 
     # axis = fig.add_subplot(1, 1, 1)
 
-    fig, ax = plt.subplots(figsize=(10, 6))
+    # fig, ax = plt.subplots(figsize=(10, 6))
 
 
     plt.rc('font', size=8)    # font size
@@ -197,6 +199,9 @@ def graphData(independant, dependant, symbolName, prices, companyName):
     x = np.array(independant)
 
     y = np.array(dependant)
+
+    today = datetime.now()
+    one_month_ago = today - timedelta(days=30)
 
     # Calculate the slope
     # Use np.polyfit to fit a line (degree=1) to the price data
@@ -207,25 +212,40 @@ def graphData(independant, dependant, symbolName, prices, companyName):
     if currPriceChange > 0:
         line_color = 'green'
     else:
-     line_color = 'red'
+        line_color = 'red'
 
-    ax.plot(x, y, color=line_color)
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color=line_color), name=f"{companyName}'s Prices"))
+    
+    # fig.update_xaxes(title_text="Dates", tickformat="%Y-%m-%d", dtick="86400000.0*2", tickangle=45)
+    fig.update_xaxes(
+        title_text="Dates",
+        tickformat="%Y-%m-%d",
+        tickangle=45,
+        range=[one_month_ago, today],
+        tickmode='linear',
+        dtick=86400000.0 * 2  # Tick every other day
+    )
+    fig.update_yaxes(title_text="Prices")
+    fig.update_layout(title=f"{companyName}'s Prices", margin=dict(l=0, r=0, t=30, b=0))
 
-    ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+    # ax.plot(x, y, color=line_color)
 
-    ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+    # ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
 
-    plt.xticks(rotation=45, ha='right')
+    # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
 
-    today = datetime.now()
-    one_month_ago = today - timedelta(days=30)
-    ax.set_xlim(one_month_ago, today)
+    # plt.xticks(rotation=45, ha='right')
+
+    # today = datetime.now()
+    # one_month_ago = today - timedelta(days=30)
+    # ax.set_xlim(one_month_ago, today)
 
     # plt.plot(x,y)
 
-    plt.xlabel("Dates")  # add X-axis label
-    plt.ylabel("Prices")  # add Y-axis label
-    plt.title(f"{companyName}'s prices")  # add title
+    # plt.xlabel("Dates")  # add X-axis label
+    # plt.ylabel("Prices")  # add Y-axis label
+    # plt.title(f"{companyName}'s prices")  # add title
    
 
     # plt.show()
@@ -237,8 +257,15 @@ def graphData(independant, dependant, symbolName, prices, companyName):
 
     # return fig
     # plt.show()
-    plt.tight_layout()
-    plt.savefig('static/images/new_plot.png')
+    # plt.tight_layout()
+    # plt.savefig('static/images/new_plot.png')
+
+     # Define the date range for the last 30 days
+    # today = datetime.now()
+    # one_month_ago = today - timedelta(days=30)
+    # fig.update_xaxes(range=[one_month_ago, today])
+    graph_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
+    return f'<div style="width:50%;">{graph_html}</div>'
 
     
 # function to find stock information on comapny
@@ -321,7 +348,8 @@ def name_to_graph(companySymbol):
 
     companyName = profileDF['name'][0]
     print(f"NAME IS {companyName}")
-    graphData(df['date'],df['open'], companySymbol, prices, companyName)
+    res = graphData(df['date'],df['open'], companySymbol, prices, companyName)
+    return res
 
 #Setting up the database
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
@@ -507,15 +535,15 @@ def market():
     if request.method == 'POST': 
         user_requested_company = form.getName()
         
-        print(user_requested_company)
+        # print(user_requested_company)
         if len(user_requested_company) > 0 :  
-            name_to_graph(user_requested_company)
-
-
+            plot_html = name_to_graph(user_requested_company)
+            # url = "../static/images/new_plot.png"
+            print(plot_html)
 
             
 
-            return render_template('market.html', form=form, word=user_requested_company, url = "../static/images/new_plot.png")
+            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html)
     
     return render_template('market.html', form=form,)
     
