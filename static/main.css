@@ -1,7 +1,9 @@
 /* element selection */
 body {
     font-family: "Poppins";
+
     text-align: center;
+
 }
 
 h1 {
@@ -22,7 +24,7 @@ p {
 }
 
 .market-mind-link{
-    font-family: "Poppins";
+    font-family: 'Times New Roman', Times, serif;
     display: inline-block; 
     font-size: 1.5rem;
     text-decoration: none;
@@ -338,4 +340,8 @@ p {
 
 .article p {
     font-size: 0.9rem;
+}
+
+.page_indicator{
+    color: #195AFD;
 }
