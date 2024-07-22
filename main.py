@@ -325,26 +325,27 @@ def getCompanyInfo(nameOfCompany):
             listOfCompanies[resultName] = companyDict['symbol']
 
     # list of companies that match what the user wanted 
-    print(listOfCompanies)
-    first_key = list(listOfCompanies)[0]
-    first_val = list(listOfCompanies.values())[0]
-    print(first_key)
-    print(first_val)
 
     # now we are going to have the user choose what they wanted out of the list
     
-    nameOfCompany = input("Pick one from the names provided \n")
+    #nameOfCompany = input("Pick one from the names provided \n")
 
-    if nameOfCompany not in listOfCompanies:
-        # edge case if the user picks something random
+    if listOfCompanies is None:
+        # edge case if dict is empty
         print("bruh lock in")
         returnVal = ["", "", ""]
         return returnVal
     else:
+        
+        print(listOfCompanies)
+        first_key = list(listOfCompanies)[0]
+        first_val = list(listOfCompanies.values())[0]
+        print(first_key)
+        print(first_val)
 
         # print(listOfCompanies[nameOfCompany])
 
-        companySymbol = listOfCompanies[nameOfCompany]
+        companySymbol = listOfCompanies[first_key]
 
         companyProfile = stockApiCall(companySymbol, 2)
 
