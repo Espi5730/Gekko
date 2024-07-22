@@ -1,16 +1,28 @@
-
-from flask import Flask, render_template,jsonify,request
+from flask import Flask, render_template,jsonify,request, Response
+from flask_behind_proxy import FlaskBehindProxy
 from openai import OpenAI
-import sqlite3
 from urllib.request import urlopen
+from forms import userPrompt
+from textblob import TextBlob
+import secrets
+import sqlite3
 import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 import certifi
 import json
 import requests
-from textblob import TextBlob
 import os
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
+import io
+import matplotlib
+import PyQt5
+from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
+import matplotlib.dates as mdates
+from plotly.subplots import make_subplots
+import plotly.graph_objs as go
 
 # from newspaper import Article
 # from newspaper import Config
@@ -22,6 +34,29 @@ import newspaper
 apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 # functions
+# function to get price change
+def getPriceChange(stockSymbol):
+    companyPriceURL = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{stockSymbol}?apikey={apiKey}")
+
+    response = urlopen(companyPriceURL, cafile=certifi.where())
+    
+    data = response.read().decode("utf-8")
+    
+    jsonOfCompanies = json.loads(data)
+    
+    return jsonOfCompanies
+
+# function to get all company names
+def getAllCompanies():
+    companySearchUrl = (f'https://financialmodelingprep.com/api/v3/stock/list?apikey={apiKey}')
+        
+    response = urlopen(companySearchUrl, cafile=certifi.where())
+    
+    data = response.read().decode("utf-8")
+    
+    jsonOfCompanies = json.loads(data)
+    
+    return jsonOfCompanies
 
 # function to search for news on a company 
 def newsSearch(searchTerm):
@@ -85,7 +120,7 @@ def stockApiCall(nameOfCompany, option):
     if option == 1:
         # use api to return a list of company names that match the name 
 
-        generalSearchUrl = (f'https://financialmodelingprep.com/api/v3/search?query={nameOfCompany}&limit=10&&apikey={apiKey}')
+        generalSearchUrl = (f'https://financialmodelingprep.com/api/v3/search?query={nameOfCompany}&limit=3&&apikey={apiKey}')
         
         # turn the request into json format
 
@@ -113,7 +148,22 @@ def stockApiCall(nameOfCompany, option):
         return jsonOfCompanies
     
     elif option == 3:
-        companyHistoryPriceUrl = (f'https://financialmodelingprep.com/api/v3/historical-chart/30min/{nameOfCompany}?from=2023-09-10&to=2023-09-11&apikey={apiKey}')
+
+        # Get today's date
+        today = datetime.now()
+
+        # Calculate the date one month ago
+        one_month_ago = today - relativedelta(months=1)
+
+        # Format both dates as yyyy-mm-dd
+        today_str = today.strftime('%Y-%m-%d')
+        # print(today_str)
+        one_month_ago_str = one_month_ago.strftime('%Y-%m-%d')
+        # print(one_month_ago_str)
+
+
+
+        companyHistoryPriceUrl = (f'https://financialmodelingprep.com/api/v3/historical-chart/1hour/{nameOfCompany}?from={one_month_ago_str}&to={today_str}&apikey={apiKey}')
 
         # turn the request into json format
 
@@ -125,32 +175,102 @@ def stockApiCall(nameOfCompany, option):
         
         return jsonOfCompanies
     
+
+
 # function to make line graph from the time and quotes of a company
-def graphData(independant, dependant, companyName):
+def graphData(independant, dependant, symbolName, prices, companyName):
 
-    
+    # print(f"PRICES ARE {prices}")
+    matplotlib.use('qtagg')
 
-    plt.rc('font', size=4)    # font size
+    plt.clf()
+
+    # fig = Figure()
+
+    # fig.suptitle(f"{companyName}'s Quotas")
+
+    # axis = fig.add_subplot(1, 1, 1)
+
+    # fig, ax = plt.subplots(figsize=(10, 6))
+
+
+    plt.rc('font', size=8)    # font size
 
     x = np.array(independant)
 
     y = np.array(dependant)
 
-    plt.plot(x,y)
+    today = datetime.now()
+    print(f"TODAY IS {today}")
+    one_month_ago = today - timedelta(days=30)
 
-    plt.xlabel("Dates")  # add X-axis label
-    plt.ylabel("Price")  # add Y-axis label
-    plt.title(f"{companyName}'s prices")  # add title
+    # Calculate the slope
+    # Use np.polyfit to fit a line (degree=1) to the price data
+    # slope, intercept = np.polyfit(range(len(y)), y, 1)
+    currPriceChange = float(prices['1M'])
+    # Set the line color based on the slope
+    line_color=''
+    if currPriceChange > 0:
+        line_color = 'green'
+    else:
+        line_color = 'red'
+
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color=line_color), name=f"{companyName}'s Prices"))
+    
+    # fig.update_xaxes(title_text="Dates", tickformat="%Y-%m-%d", dtick="86400000.0*2", tickangle=45)
+    fig.update_xaxes(
+        title_text="Dates",
+        tickformat="%Y-%m-%d",
+        tickangle=45,
+        range=[one_month_ago, today],
+        tickmode='linear',
+        dtick=86400000.0 * 2  # Tick every other day
+    )
+    fig.update_yaxes(title_text="Prices")
+    fig.update_layout(title=f"{companyName}'s Prices", margin=dict(l=0, r=0, t=30, b=0))
+
+    # ax.plot(x, y, color=line_color)
+
+    # ax.xaxis.set_major_locator(mdates.DayLocator(interval=2))
+
+    # ax.xaxis.set_major_formatter(mdates.DateFormatter('%Y-%m-%d'))
+
+    # plt.xticks(rotation=45, ha='right')
+
+    # today = datetime.now()
+    # one_month_ago = today - timedelta(days=30)
+    # ax.set_xlim(one_month_ago, today)
+
+    # plt.plot(x,y)
+
+    # plt.xlabel("Dates")  # add X-axis label
+    # plt.ylabel("Prices")  # add Y-axis label
+    # plt.title(f"{companyName}'s prices")  # add title
    
 
-    plt.show()
+    # plt.show()
+
+    # axis.set_xlabel("Dates")
+    # axis.set_ylabel("Prices")
+
+    # axis.plot(x, y)
+
+    # return fig
+    # plt.show()
+    # plt.tight_layout()
+    # plt.savefig('static/images/new_plot.png')
+
+     # Define the date range for the last 30 days
+    # today = datetime.now()
+    # one_month_ago = today - timedelta(days=30)
+    # fig.update_xaxes(range=[one_month_ago, today])
+    graph_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
+    return f'<div style="width:50%;">{graph_html}</div>'
 
     
 # function to find stock information on comapny
-def getCompanyInfo():
-
-    # ask user what company they want to see
-    nameOfCompany = str(input("What is the name of the company you want to look up?\n"))
+def getCompanyInfo(nameOfCompany):
 
     jsonOfCompanies = stockApiCall(nameOfCompany, 1)
 
@@ -202,6 +322,35 @@ def getCompanyInfo():
 
         # graph the data
         graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
+
+# a function to return a graph to a page based on the word that was searched
+def name_to_graph(companySymbol):
+    quoteJson = stockApiCall(companySymbol, 3)
+
+    changeInPrice = getPriceChange(companySymbol)
+
+    profileJson = stockApiCall(companySymbol, 1)
+    
+    profileDF = pd.json_normalize(profileJson)
+
+    # print(profileDF)
+
+    prices = pd.json_normalize(changeInPrice)
+
+    df = pd.json_normalize(quoteJson)
+
+    # Convert the date column to datetime format
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Extract only the date part
+    df['date'] = df['date'].dt.date
+
+    # print(df['date'].tail(5))
+
+    companyName = profileDF['name'][0]
+    print(f"NAME IS {companyName}")
+    res = graphData(df['date'],df['open'], companySymbol, prices, companyName)
+    return res
 
 #Setting up the database
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
@@ -296,10 +445,10 @@ client=OpenAI(
 
 # getCompanyInfo()
 
-res = newsSearch("Microsoft")
+# res = newsSearch("Microsoft")
 
-url = res[0]['url']
-print(url)
+# url = res[0]['url']
+# print(url)
 
 # sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
 
@@ -307,6 +456,20 @@ print(url)
 
 
 app = Flask(__name__)
+
+key = secrets.token_hex(16)
+
+proxied = FlaskBehindProxy(app)
+
+app.config['SECRET_KEY'] = key
+
+# @app.route('/plot.png')
+# def plot_png(symbol):
+#     fig = name_to_graph(symbol)
+#     output = io.BytesIO()
+#     FigureCanvas(fig).print_png(output)
+#     return Response(output.getvalue(), mimetype='image/png')
+
 
 @app.route('/')
 def home():
@@ -319,10 +482,72 @@ def about():
 @app.route('/portfolio')
 def portfolio():
     return render_template('portfolio.html')
+"""
+    form = userPrompt()
 
-@app.route('/market')
+    if request.method == 'POST' and form.validate_on_submit():
+        user_definition = form.getDefintion()
+        word = form.word.data
+
+        output = useChatGPT(str(user_definition),
+                            word, getDefintion(word, uid, tokenid))
+
+        form.word.data = getNewWord(word_list)
+        addDatabase(output, word)
+        return render_template('home.html', form=form,
+                               message=output[0], grade=output[1],
+                               word=form.word.data)
+
+    form.word.data = getNewWord(word_list)
+    return render_template('home.html', form=form, word=form.word.data)
+
+"""
+@app.route('/market', methods=['GET', 'POST'])
+
 def market():
-    return render_template('market.html')
+    """
+    From the bottom of my heart, I hate this code with every fiber of my being
+    I hope they use this in 300 years as a basis for a horror story
+    Caught in a loop with no ***** ending, I love CS
+    - Matthew
+    """
+    form = userPrompt()
+
+    search = ""  
+
+    # autocomplete?
+
+    # jsonOfCompanies = getAllCompanies()
+
+    # print(jsonOfCompanies[0]['name'])
+
+    # listOfCompanies = {}
+
+    # for companyDict in jsonOfCompanies:
+       
+    #     resultName = companyDict['name']
+    #     if resultName not in listOfCompanies:
+    #         listOfCompanies[resultName] = companyDict['symbol']
+
+    # # print(listOfCompanies["Perth Mint Gold"])
+
+    # data = listOfCompanies.items()
+
+    if request.method == 'POST': 
+        user_requested_company = form.getName()
+        
+        # print(user_requested_company)
+        if len(user_requested_company) > 0 :  
+            plot_html = name_to_graph(user_requested_company)
+            # url = "../static/images/new_plot.png"
+            
+
+            
+
+            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html)
+    
+    return render_template('market.html', form=form,)
+    
 
 @app.route('/resources')
 def learn():

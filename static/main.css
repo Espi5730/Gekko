@@ -442,3 +442,12 @@ td {
     border-radius: 5px;
     margin-bottom: 5px;
 }
+
+.block {
+    display: block;
+}
+
+.btn {
+    background-color: #42ABEF;
+    color: white;
+}
