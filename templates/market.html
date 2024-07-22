@@ -76,24 +76,25 @@
         <table>
           <tr>
             <th>Symbol</th>
+            <th>Name</th>
             <th>Price</th>
-            <th>Other Data</th>
-            <th>Other Data</th>
             <th>Other Data</th>
           </tr>
           <tr class="stock">
-            <td>
-              <div class="symbol">
-                <p class="no-bottom"> {{ ticket }}</p>
-                <p class="no-bottom"> {{ name }}</p>
-              </div>
-            </td>
+            <td>{{ ticket }}</td>
+            <td>{{ name }}</td>
             <td>{{ value }}</td>
-            <td>ticket Data</td>
-            <td>ticket Data</td>
-            <td>ticket Data</td>
           </tr>
         </table>
+        <form method="POST" action="/portfolio" class="text-section">
+          <div class="form-group">
+            <div class="input-container">
+              <div class="form-group button-group center">
+                {{ form.submit(id="input-button", class="btn") }}
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>  
 </body>

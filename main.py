@@ -10,6 +10,7 @@ from matplotlib.figure import Figure
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
 from plotly.subplots import make_subplots
+from add import addPortfolio
 import requests
 import re
 import secrets
@@ -32,6 +33,9 @@ apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
 # apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 # subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
+
+#validators
+stock_data = ["", "", ""]
 
 # functions
 # function to get news
@@ -409,18 +413,18 @@ c=conn.cursor()
 c.execute('''
     CREATE TABLE IF NOT EXISTS portfolio (
     id Integer PRIMARY KEY,
+    ticket TEXT NOT NULL,
     name TEXT NOT NULL,
-    price Integer,
-    changeInPrice Integer
+    price Integer
     )
 ''')
 
 #adds the stock onto the personal portfolio db
-def addDatabase(name,price,changeInPrice):
+def addDatabase(ticket, name, price):
     c.execute('''
-    INSERT INTO portfolio(name,price,changeInPrice),
+    INSERT INTO portfolio(ticket, name, price)
     VALUES (?,?,?)
-    ''',(name,price,changeInPrice)
+    ''',(ticket, name, price)
     )
 
 #Setting up chatBot
@@ -529,15 +533,39 @@ def about():
 
 
 
-@app.route('/portfolio')
+@app.route('/portfolio', methods=['GET', 'POST'])
 def portfolio():
+    global stock_data
 
+    form = addPortfolio()
 
-    return render_template('portfolio.html')
+    if stock_data[0] != "": 
+        addDatabase(stock_data[0], stock_data[1], stock_data[2])
+        tmp = c.execute('SELECT * FROM portfolio')
+        html = tmp
+        stock_data = ["", "", ""]
+        #print("in loop")
+        #print("before")
+        #print(html)
+        #print("after")
+    return render_template('portfolio.html', table=html)
+
+    addDatabase(stock_data[0], stock_data[1], stock_data[2])
+    tmp = c.execute('SELECT * FROM portfolio')
+    html = tmp
+
+    #print("before")
+    #print(html)
+    #print("after")
+
+    return render_template('portfolio.html', table=html)
 
 @app.route('/market', methods=['GET', 'POST'])
 def market():
+    global stock_data
+    
     form = userPrompt()
+    add = addPortfolio()
     search = ""  
 
     if request.method == 'POST': 
@@ -548,19 +576,17 @@ def market():
         if len(user_definition) > 0 : 
             #api requests
 
-            data = getCompanyInfo(user_definition)
+            stock_data = getCompanyInfo(user_definition)
 
 
-            print(data)
+            print(stock_data)
             #show graph (brice)
 
 
             #display api results on page
-            return render_template('market.html', form=form, ticket=data[0], name=data[1], value=data[2])
+            return render_template('market.html', form=form, add=add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
 
-        #if add portfolio clicked 
-
-    return render_template('market.html', form=form)
+    return render_template('market.html', form=form, add=add)
     
 
 @app.route('/resources')
