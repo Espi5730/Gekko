@@ -65,8 +65,12 @@
         </form>
 
         <div class="display-graph center">
-          <img id="full" src="/static/images/200w.gif">
-          <p class="footnote">placeholder image and placeholder text</p>
+          {% if plot_html %}
+            <!-- <img id="full" src={{url}} alt="my plot"> -->
+            {{ plot_html | safe }}
+          {% else %}
+            <img id="full" src="../static/images/200w.gif" alt="my plot">
+          {% endif %}
         </div>
       </div>
 

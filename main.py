@@ -39,125 +39,6 @@ stock_data = ["", "", ""]
 
 # functions
 # function to get news
-def newsSearch(searchTerm):
-    search_url = "https://api.bing.microsoft.com/v7.0/news/search"
-    headers = {"Ocp-Apim-Subscription-Key": subscriptionKey}
-    params = {
-        "q": f"{searchTerm} stock market finance",
-        "textDecorations": True,
-        "textFormat": "HTML",
-        "mkt": "en-US",
-        "count": 20  # to get more results and filter later
-    }
-
-    response = requests.get(search_url, headers=headers, params=params)
-    response.raise_for_status()
-    results = response.json()
-    stories = results['value']
-
-    def strip_html_tags(text):
-        clean = re.compile('<.*?>')
-        return re.sub(clean, '', text)
-
-    resultList = []
-    for story in stories:
-        image_url = story.get('image', {}).get('thumbnail', {}).get('contentUrl', '')
-        # if a larger image URL is available in the API response so we can get a better quality photo
-        if 'contentUrl' in story.get('image', {}):
-            image_url = story['image']['contentUrl']
-        resultList.append({
-            'name': story['name'],
-            'url': story['url'],
-            'image': image_url,
-            'description': strip_html_tags(story['description']),
-            'provider': story['provider'][0]['name'],
-            'date': story['datePublished']
-        })
-
-    return resultList
-
-
-
-# function to get price change
-def getPriceChange(stockSymbol):
-    companyPriceURL = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{stockSymbol}?apikey={apiKey}")
-
-    response = urlopen(companyPriceURL, cafile=certifi.where())
-    
-    data = response.read().decode("utf-8")
-    
-    jsonOfCompanies = json.loads(data)
-    
-    return jsonOfCompanies
-
-# function to get all company names
-def getAllCompanies():
-    companySearchUrl = (f'https://financialmodelingprep.com/api/v3/stock/list?apikey={apiKey}')
-        
-    response = urlopen(companySearchUrl, cafile=certifi.where())
-    
-    data = response.read().decode("utf-8")
-    
-    jsonOfCompanies = json.loads(data)
-    
-    return jsonOfCompanies
-
-# function to search for news on a company 
-# def newsSearch(searchTerm):
-#     search_url = "https://api.bing.microsoft.com/v7.0/news/search"
-
-#     headers = {"Ocp-Apim-Subscription-Key" : subcriptionKey}
-#     params  = {"q": searchTerm, "textDecorations": True, "textFormat": "HTML"}
-
-#     response = requests.get(search_url, headers=headers, params=params)
-#     response.raise_for_status()
-#     results = response.json()
-
-#     # this will get you the first url
-#     # print(results['value'][0]['url'])
-
-#     # a list of the news articles from the searched word
-#     stories = results['value']
-
-#     resultList = []
-
-#     for story in stories:
-
-#         resultList.append( { 'name' : story['name'], 'url' : story['url'], 'image' : story['image']['thumbnail']['contentUrl'], 'description' : story['description'], 'provider' : story['provider'][0]['name'], 'data' : story['datePublished']} )
-    
-#     # print(resultList[0])
-
-#     return resultList
-
-
-    # search_results = json.dumps(response.json())
-
-   
-    # pprint.pp(search_results[0])
-
-# # function to analyze the sentiment of the aritcle
-
-# def sentimentAnalysis(url):
-
-#     # USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/17.5 Safari/605.1.15'
-
-#     # config = Config()
-#     # config.browser_user_agent = USER_AGENT
-#     # config.request_timeout = 10
-
-#     # article = Article(url, config=config)
-#     article = newspaper.article(url)
-#     article.download()
-#     article.parse()
-#     article.nlp()
-
-#     text = article.summary
-#     print(article.summary)
-#     blob = TextBlob(text)
-
-#     sentiment = blob.sentiment.polarity
-
-#     print(sentiment)
 
 # function specifically made to make an api call
 def stockApiCall(nameOfCompany, option):
@@ -442,62 +323,176 @@ client=OpenAI(
     api_key=my_api_key
 )
 
-#Creating a chatbot response function. Gets the message from a request form from the frontend and 
-#responds to the user input 
-# @app.route('/chatbot',methods=['POST'])
-# def chatBot():
-#     #when the frontend is implemented, it would get the user message(or question) from a POST response
-#     message=request.form.get("message")
-
-#     completion = client.chat.completions.create(
-#     model="gpt-3.5-turbo",
-#     messages=[
-#         {"role": "system", "content": "You are a financial advisor or stock expert that gives advice to college students who are curious about anything related to stocks or finance"},
-#         #Gets the user message
-#         {"role": "user", "content":message}
-#     ]
-#     )
-
-#     return completion.choices[0].message.content
   
+# functions
+# function to get news
+def newsSearch(searchTerm):
+    return resultList
 
-#Creating a chatbot response function. Gets the message from a request form from the frontend and 
-#responds to the user input 
+# function to get price change
+def getPriceChange(stockSymbol):
 
-# @app.route('/chatbot', methods=['POST'])
-# def chatBot():
-#     my_api_key = os.getenv('OPENAI_KEY')
+    companyPriceURL = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{stockSymbol}?apikey={apiKey}")
 
-#     client = OpenAI(
-#         api_key=my_api_key,
-#     )
+    response = urlopen(companyPriceURL, cafile=certifi.where())
 
-#     try:
-#             message = request.form.get("message")
-#             print(f"Received message: {message}")  # Debugging statement
+    data = response.read().decode("utf-8")
+    
+    jsonOfCompanies = json.loads(data)
+    
+    return jsonOfCompanies
 
-#             # Create a chat completion
-#             completion = client.chat.completions.create(model="gpt-3.5-turbo",
-#             messages=[
-#                 {"role": "user", "content": message}
-#             ])
+# function to get all company names
+def getAllCompanies():
+    companySearchUrl = (f'https://financialmodelingprep.com/api/v3/stock/list?apikey={apiKey}')
+        
+    response = urlopen(companySearchUrl, cafile=certifi.where())
+    
+    data = response.read().decode("utf-8")
+    
+    jsonOfCompanies = json.loads(data)
+    
+    return jsonOfCompanies
 
-#             ai_response = completion.choices[0].message.content.strip()
-#             print(f"AI Response: {ai_response}")  # Debugging statement
+def stockApiCall(nameOfCompany, option):
+    if option == 1:
+        # use api to return a list of company names that match the name 
 
-#             return jsonify({"response": ai_response})
-#     except Exception as e:
-#             print(f"Error: {e}")
-#             return jsonify({"response": "Sorry, I didn't understand that."})
+        generalSearchUrl = (f'https://financialmodelingprep.com/api/v3/search?query={nameOfCompany}&limit=3&&apikey={apiKey}')
+        
+        # turn the request into json format
 
-# getCompanyInfo()
+        response = urlopen(generalSearchUrl, cafile=certifi.where())
+       
+        data = response.read().decode("utf-8")
+       
+        jsonOfCompanies = json.loads(data)
+        
+        return jsonOfCompanies
+    
+    elif option == 2:
+        # use api to return a list of company profiles that match the name 
+       
+        companyProfileUrl = (f'https://financialmodelingprep.com/api/v3/profile/{nameOfCompany}?apikey={apiKey}')
+        
+        # turn the request into json format
 
-# res = newsSearch("Microsoft")
+        response = urlopen(companyProfileUrl, cafile=certifi.where())
+        
+        data = response.read().decode("utf-8")
+        
+        jsonOfCompanies = json.loads(data)
+        
+        return jsonOfCompanies
+    
+    elif option == 3:
 
-# url = res[0]['url']
-# print(url)
+        # Get today's date
+        today = datetime.now()
 
-# sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
+        # Calculate the date one month ago
+        one_month_ago = today - relativedelta(months=1)
+
+        # Format both dates as yyyy-mm-dd
+        today_str = today.strftime('%Y-%m-%d')
+        # print(today_str)
+        one_month_ago_str = one_month_ago.strftime('%Y-%m-%d')
+        # print(one_month_ago_str)
+
+
+
+        companyHistoryPriceUrl = (f'https://financialmodelingprep.com/api/v3/historical-chart/1hour/{nameOfCompany}?from={one_month_ago_str}&to={today_str}&apikey={apiKey}')
+
+        # turn the request into json format
+
+        response = urlopen(companyHistoryPriceUrl, cafile=certifi.where())
+        
+        data = response.read().decode("utf-8")
+        
+        jsonOfCompanies = json.loads(data)
+        
+        return jsonOfCompanies
+    
+
+
+# function to make line graph from the time and quotes of a company
+def graphData(independant, dependant, symbolName, prices, companyName):
+
+    # print(f"PRICES ARE {prices}")
+    matplotlib.use('qtagg')
+
+    plt.clf()
+
+
+    plt.rc('font', size=8)    # font size
+
+    x = np.array(independant)
+
+    y = np.array(dependant)
+
+    today = datetime.now()
+    print(f"TODAY IS {today}")
+    one_month_ago = today - timedelta(days=30)
+
+    # Calculate the slope
+    # Use np.polyfit to fit a line (degree=1) to the price data
+    # slope, intercept = np.polyfit(range(len(y)), y, 1)
+    currPriceChange = float(prices['1M'])
+    # Set the line color based on the slope
+    line_color=''
+    if currPriceChange > 0:
+        line_color = 'green'
+    else:
+        line_color = 'red'
+
+    fig = make_subplots(rows=1, cols=1)
+    fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color=line_color), name=f"{companyName}'s Prices"))
+    
+    # fig.update_xaxes(title_text="Dates", tickformat="%Y-%m-%d", dtick="86400000.0*2", tickangle=45)
+    fig.update_xaxes(
+        title_text="Dates",
+        tickformat="%Y-%m-%d",
+        tickangle=45,
+        range=[one_month_ago, today],
+        tickmode='linear',
+        dtick=86400000.0 * 2  # Tick every other day
+    )
+    fig.update_yaxes(title_text="Prices")
+    fig.update_layout(title=f"{companyName}'s Prices", margin=dict(l=0, r=0, t=30, b=0), paper_bgcolor='rgba(235, 241, 254, 0.3)')
+
+    graph_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
+    return f'<div style="width:50%;">{graph_html}</div>'
+
+
+# a function to return a graph to a page based on the word that was searched
+def name_to_graph(companySymbol):
+    quoteJson = stockApiCall(companySymbol, 3)
+
+    changeInPrice = getPriceChange(companySymbol)
+
+    profileJson = stockApiCall(companySymbol, 1)
+    
+    profileDF = pd.json_normalize(profileJson)
+
+    # print(profileDF)
+
+    prices = pd.json_normalize(changeInPrice)
+
+    df = pd.json_normalize(quoteJson)
+
+    # Convert the date column to datetime format
+    df['date'] = pd.to_datetime(df['date'])
+
+    # Extract only the date part
+    df['date'] = df['date'].dt.date
+
+    # print(df['date'].tail(5))
+
+    companyName = profileDF['name'][0]
+    print(f"NAME IS {companyName}")
+    res = graphData(df['date'],df['open'], companySymbol, prices, companyName)
+    return res
+
 
 #Set up flask
 
@@ -506,23 +501,15 @@ key = secrets.token_hex(16)
 proxied = FlaskBehindProxy(app)
 app.config['SECRET_KEY'] = key
 
-# @app.route('/plot.png')
-# def plot_png(symbol):
-#     fig = name_to_graph(symbol)
-#     output = io.BytesIO()
-#     FigureCanvas(fig).print_png(output)
-#     return Response(output.getvalue(), mimetype='image/png')
-
-
 
 @app.route('/')
 def home():
     return render_template('index.html')
 
+
 @app.route('/about')
 def about():
     return render_template('about.html')
-
 
 
 @app.route('/portfolio', methods=['GET', 'POST'])
@@ -559,6 +546,7 @@ def market():
 
     if request.method == 'POST': 
         user_definition = form.getName()
+        user_requested_company = form.getName()
 
         #if add portfolio clicked 
         print(user_definition)
@@ -566,6 +554,7 @@ def market():
             #api requests
 
             stock_data = getCompanyInfo(user_definition)
+            plot_html = name_to_graph(user_requested_company)
 
 
             print(stock_data)
@@ -573,7 +562,7 @@ def market():
 
 
             #display api results on page
-            return render_template('market.html', form=form, add=add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
+            return render_template('market.html', form=form, add=add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2],  plot_html = plot_html)
 
     return render_template('market.html', form=form, add=add)
     
@@ -596,8 +585,6 @@ def get_news():
         for article in news_data
     ]
     return jsonify(articles)
-
-
 
 
 if __name__ == '__main__':
