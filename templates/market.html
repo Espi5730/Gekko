@@ -87,10 +87,11 @@
           </tr>
         </table>
         <form method="POST" action="/portfolio" class="text-section">
+        {{ form.hidden_tag() }}
           <div class="form-group">
             <div class="input-container">
               <div class="form-group button-group center">
-                {{ form.submit(id="input-button", class="btn") }}
+                {{ add.submit(id="input-button", class="btn") }}
               </div>
             </div>
           </div>
