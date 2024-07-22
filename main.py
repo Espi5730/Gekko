@@ -315,8 +315,12 @@ def graphData(independant, dependant, symbolName, prices, companyName):
     
 # function to find stock information on comapny
 def getCompanyInfo(nameOfCompany):
+    returnVal = ["", "", ""]
+    try:  
+        jsonOfCompanies = stockApiCall(nameOfCompany, 1)
+    except:
+        return [" "," "," "]
 
-    jsonOfCompanies = stockApiCall(nameOfCompany, 1)
 
     # print(jsonOfCompanies[0]['name'])
 
@@ -329,6 +333,9 @@ def getCompanyInfo(nameOfCompany):
             listOfCompanies[resultName] = companyDict['symbol']
 
     # list of companies that match what the user wanted 
+
+    if listOfCompanies is None:
+        return [" "," "," "]
 
     # now we are going to have the user choose what they wanted out of the list
     
@@ -362,21 +369,6 @@ def getCompanyInfo(nameOfCompany):
 
         return returnVal
 
-        
-        """
-        # retreiving quote from a certain time
-        quoteJson = stockApiCall(companySymbol, 3)
-
-        # print(quoteJson[0])
-        # turn into a dataframe
-        df = pd.json_normalize(quoteJson)
-
-        # print dataframe
-        # print(df.loc['date'])
-
-        # graph the data
-        graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
-        """
 
 # a function to return a graph to a page based on the word that was searched
 def name_to_graph(companySymbol):
@@ -537,24 +529,21 @@ def about():
 def portfolio():
     global stock_data
 
-    form = addPortfolio()
 
     if stock_data[0] != "": 
         addDatabase(stock_data[0], stock_data[1], stock_data[2])
         tmp = c.execute('SELECT * FROM portfolio')
         html = tmp
         stock_data = ["", "", ""]
-        #print("in loop")
-        #print("before")
-        #print(html)
-        #print("after")
-    return render_template('portfolio.html', table=html)
+        print("in loop")
 
-    addDatabase(stock_data[0], stock_data[1], stock_data[2])
+        return render_template('portfolio.html', table=html)
+
+    #addDatabase(stock_data[0], stock_data[1], stock_data[2])
     tmp = c.execute('SELECT * FROM portfolio')
     html = tmp
 
-    #print("before")
+    print("out of loop")
     #print(html)
     #print("after")
 
