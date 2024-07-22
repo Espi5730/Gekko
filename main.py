@@ -347,8 +347,10 @@ def getCompanyInfo(nameOfCompany):
         returnVal = ["", "", ""]
         return returnVal
     else:
+        print(len(listOfCompanies))
         
-        print(listOfCompanies)
+        if len(listOfCompanies) < 1:
+            return [" "," "," "]
         first_key = list(listOfCompanies)[0]
         first_val = list(listOfCompanies.values())[0]
         print(first_key)
