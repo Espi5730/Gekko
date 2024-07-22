@@ -201,6 +201,7 @@ def graphData(independant, dependant, symbolName, prices, companyName):
     y = np.array(dependant)
 
     today = datetime.now()
+    print(f"TODAY IS {today}")
     one_month_ago = today - timedelta(days=30)
 
     # Calculate the slope
@@ -539,7 +540,7 @@ def market():
         if len(user_requested_company) > 0 :  
             plot_html = name_to_graph(user_requested_company)
             # url = "../static/images/new_plot.png"
-            print(plot_html)
+            
 
             
 
