@@ -77,10 +77,11 @@ def newsSearch(searchTerm):
 
 # function to get price change
 def getPriceChange(stockSymbol):
+
     companyPriceURL = (f"https://financialmodelingprep.com/api/v3/stock-price-change/{stockSymbol}?apikey={apiKey}")
 
     response = urlopen(companyPriceURL, cafile=certifi.where())
-    
+
     data = response.read().decode("utf-8")
     
     jsonOfCompanies = json.loads(data)
@@ -579,14 +580,13 @@ def market():
         user_requested_company = form.getName()
         
         # print(user_requested_company)
-        if len(user_requested_company) > 0 :  
+        if len(user_requested_company) > 0 :
+
             plot_html = name_to_graph(user_requested_company)
+            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html)
+            
             # url = "../static/images/new_plot.png"
             
-
-            
-
-            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html)
     
     return render_template('market.html', form=form,)
     
