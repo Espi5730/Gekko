@@ -493,6 +493,7 @@ client=OpenAI(
 
 # sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
 
+#random comment
 
 
 
@@ -614,4 +615,4 @@ def get_news():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0", port=5001)
+    app.run(debug=True,host="0.0.0.0", port=5000)
