@@ -321,3 +321,21 @@ p {
 .black{
     color: #000000;
 }
+
+.article {
+    margin-bottom: 20px;
+}
+
+.article h2 {
+    font-size: 1.25rem;
+}
+
+.article img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+}
+
+.article p {
+    font-size: 0.9rem;
+}
