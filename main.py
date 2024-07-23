@@ -318,11 +318,11 @@ def graphData(independant, dependant, symbolName, prices, companyName):
 # function to find stock information on comapny
 def getCompanyInfo(nameOfCompany):
 
-    returnVal = ["", "", ""]
-    try:  
-        jsonOfCompanies = stockApiCall(nameOfCompany, 1)
-    except:
-        return [" "," "," "]
+    # returnVal = ["", "", ""]
+    # try:  
+    #     jsonOfCompanies = stockApiCall(nameOfCompany, 1)
+    # except:
+    #     return [" "," "," "]
 
     jsonOfCompanies = stockApiCall(nameOfCompany, 1)
 
