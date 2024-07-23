@@ -25,10 +25,12 @@ from plotly.subplots import make_subplots
 import plotly.graph_objs as go
 from playwright.sync_api import sync_playwright
 from resources import initialize_db, scrape_and_store, get_resources
-from openai import OpenAI
+# from openai import OpenAI
 from forms import userPrompt
 import PyQt5
 from news import newsSearch
+import openai
+
 
 app = Flask(__name__)
 
@@ -51,56 +53,6 @@ for url in urls:
 
 apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
-
-
-# def take_screenshot(url):
-#     with sync_playwright() as p:
-#         browser = p.chromium.launch()
-#         page = browser.new_page()
-#         page.goto(url)
-#         screenshot = page.screenshot(full_page=True)
-#         browser.close()
-#         return screenshot
-
-
-# function to get news
-# def newsSearch(searchTerm):
-#     search_url = "https://api.bing.microsoft.com/v7.0/news/search"
-#     headers = {"Ocp-Apim-Subscription-Key": subscriptionKey}
-#     params = {
-#         "q": f"{searchTerm} stock market finance",
-#         "textDecorations": True,
-#         "textFormat": "HTML",
-#         "mkt": "en-US",
-#         "count": 20  # to get more results and filter later
-#     }
-
-#     response = requests.get(search_url, headers=headers, params=params)
-#     response.raise_for_status()
-#     results = response.json()
-#     stories = results['value']
-
-#     def strip_html_tags(text):
-#         clean = re.compile('<.*?>')
-#         return re.sub(clean, '', text)
-
-#     resultList = []
-#     for story in stories:
-#         image_url = story.get('image', {}).get('thumbnail', {}).get('contentUrl', '')
-#         # if a larger image URL is available in the API response so we can get a better quality photo
-#         if 'contentUrl' in story.get('image', {}):
-#             image_url = story['image']['contentUrl']
-#         resultList.append({
-#             'name': story['name'],
-#             'url': story['url'],
-#             'image': image_url,
-#             'description': strip_html_tags(story['description']),
-#             'provider': story['provider'][0]['name'],
-#             'date': story['datePublished']
-#         })
-
-#     return resultList
-
 
 
 # function to get price change
@@ -459,10 +411,10 @@ def chatBot():
     print(completion.choices[0].message.content) 
 '''
 
-my_api_key=('OPENAI_KEY')
-client=OpenAI(
-    api_key=my_api_key
-)
+# my_api_key=('OPENAI_KEY')
+# client=OpenAI(
+#     api_key=my_api_key
+# )
 
 #Creating a chatbot response function. Gets the message from a request form from the frontend and 
 #responds to the user input 
@@ -522,8 +474,6 @@ client=OpenAI(
 # sentimentAnalysis("https://www.cnbc.com/2024/07/16/self-proclaimed-bitcoin-inventor-craig-wright-referred-to-prosecutors.html")
 
 
-
-
 app = Flask(__name__)
 
 key = secrets.token_hex(16)
@@ -538,7 +488,6 @@ app.config['SECRET_KEY'] = key
 #     output = io.BytesIO()
 #     FigureCanvas(fig).print_png(output)
 #     return Response(output.getvalue(), mimetype='image/png')
-
 
 
 @app.route('/')
@@ -643,20 +592,9 @@ def screenshot(resource_id):
     else:
         return "No image available", 404
 
-
 @app.route('/news')
 def news():
     return render_template('news.html')
-
-# @app.route('/get_news', methods=['GET'])
-# def get_news():
-#     company = request.args.get('company')
-#     news_data = newsSearch(company)
-#     articles = [
-#         {"name": article['name'], "url": article['url'], "image": article['image'], "description": article['description']}
-#         for article in news_data
-#     ]
-#     return jsonify(articles)
 
 @app.route('/get_news', methods=['GET'])
 def get_news():
@@ -668,6 +606,25 @@ def get_news():
     else:
         return jsonify({"error": "Failed to fetch news"}), 500
 
+# Setting up chatBot
+my_api_key = os.getenv('OPENAI_KEY')
+openai.api_key = my_api_key
+
+@app.route('/chatbot', methods=['POST'])
+def chat_bot():
+    user_message = request.form['message']
+    try:
+        response = openai.ChatCompletion.create(
+            model="gpt-3.5-turbo",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant."},
+                {"role": "user", "content": user_message}
+            ]
+        )
+        ai_response = response['choices'][0]['message']['content']
+        return jsonify({'response': ai_response})
+    except Exception as e:
+        return jsonify({'response': str(e)})
 
 if __name__ == '__main__':
     app.run(debug=True,host="0.0.0.0", port=5001)
