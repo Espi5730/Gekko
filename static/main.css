@@ -125,6 +125,19 @@ td {
     background-image: linear-gradient(to left, #42ABEF, #3490F4, #2775F8, #195AFD);
 }
 
+.gradWhite {
+    background-color: #f7f7f7;
+    transition: background-color 0.3s ease; 
+    border-radius: 5px;
+
+}
+
+.gradWhite:hover {
+    background-color: #d5d3d3; 
+    cursor: pointer;
+}
+
+
 .grad-other{
     background: linear-gradient(to right, #ebf1fe , #e6edfe, #e2ecfd);
     /* background-color: #f2f2f2; */
