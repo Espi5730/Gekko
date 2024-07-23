@@ -63,42 +63,63 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 
  <!-- Chatbot Section -->
-<script>
-document.getElementById("chatbot-toggle").addEventListener("click", function() {
-    var chatContainer = document.getElementById("chat-container");
-    chatContainer.style.display = chatContainer.style.display === "none" ? "block" : "none";
-});
+ {% include 'chatbot.html' %}
+   
+ <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+ <script>
+     window.onload = function() {
+         var chatContainer = document.getElementById("chat-container");
+         var chatbotToggle = document.getElementById("chatbot-toggle");
+         var chatbotClose = document.getElementById("chatbot-close");
 
-document.getElementById("chat-form").addEventListener("submit", function(event) {
-    event.preventDefault();
-    var userInput = document.getElementById("user-input").value;
-    var chatBox = document.getElementById("chat-box");
-    
-    // Add user message to chat box
-    chatBox.innerHTML += '<div class="user-message"><strong>You:</strong> ' + userInput + '</div>';
-    
-    fetch('/chatbot', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-        },
-        body: 'message=' + encodeURIComponent(userInput)
-    })
-    .then(response => response.json()) //Handles the servers response
-    .then(data => {
-        
-        // Add AI response to chat box
-        chatBox.innerHTML += '<div class="ai-message"><strong>AI:</strong> ' + data.response + '</div>';
-        
-        // Clear input field
-        document.getElementById("user-input").value = '';
-        
-        // Scroll chat box to the bottom
-        chatBox.scrollTop = chatBox.scrollHeight;
-    })
-    .catch(error => console.error('Error:', error));
-});
-</script>
+         chatbotToggle.addEventListener("click", function() {
+             chatContainer.style.display = "block";
+             chatbotToggle.style.display = "none";
+         });
 
+         chatbotClose.addEventListener("click", function() {
+             chatContainer.style.display = "none";
+             chatbotToggle.style.display = "block";
+         });
+     };
+
+     document.getElementById("send-btn").addEventListener("click", function() {
+         var userInput = document.getElementById("user-input").value;
+         if (userInput.trim() === "") return;
+
+         var chatBox = document.getElementById("chat-box");
+         var timestamp = new Date().toLocaleTimeString();
+
+         // Add user message to chat box
+         chatBox.innerHTML += '<div class="user-message alert alert-primary" role="alert"><strong>You:</strong> ' + userInput + '<br><small>' + timestamp + '</small></div>';
+
+         fetch('/chatbot', {
+             method: 'POST',
+             headers: {
+                 'Content-Type': 'application/x-www-form-urlencoded',
+             },
+             body: 'message=' + encodeURIComponent(userInput)
+         })
+         .then(response => response.json())
+         .then(data => {
+             var aiResponse = data.response;
+
+             // Add AI response to chat box
+             chatBox.innerHTML += '<div class="ai-message alert alert-warning" role="alert"><strong>AI:</strong> ' + aiResponse + '<br><small>' + timestamp + '</small></div>';
+
+             // Clear input field
+             document.getElementById("user-input").value = '';
+
+             // Scroll chat box to the bottom
+             chatBox.scrollTop = chatBox.scrollHeight;
+         })
+         .catch(error => {
+             console.error('Error:', error);
+             chatBox.innerHTML += '<div class="error-message alert alert-danger" role="alert"><strong>Error:</strong> ' + error + '</div>';
+         });
+     });
+ </script>
 </body>
 </html>
