@@ -26,29 +26,95 @@
                 <a class="nav-link" id="white" href="/portfolio">Portfolio</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" id="white" href="/resources">Learn More</a>
-              </li>
-              <li class="nav-item">
                 <a class="nav-link" id="white" href="/news">News</a>
               </li>
               <li class="nav-item">
+                <a class="nav-link" id="white" href="/resources">Resources</a>
+              </li>
+
+              <li class="nav-item">
                 <a class="nav-link" id="white" href="/about">About</a>
               </li>
+              <!-- <li class="nav-item">
+                <a class="nav-link" id="white" href="/signup">Sign Up</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" id="white" href="/login">Login</a>
+              </li> -->
             </ul>
           </div>
         </div>
     </nav>
-      <div class="container-fluid d-flex justify-content-between  main-block">
-          <div class="text-section">
-              <p class="left landingPageTitle white">Dive into the Stock Market with Confidence!</p>
-              <p class="left landingPageDesc white">Your Gateway to Smart Investing: Discover, Learn, and Succeed with Real-Time Market Insights!</p>
-              <div class="button">
-                <a href="/market" class="get-started-btn">Get Started</a>
-              </div>
-          </div>
-          <div class="image-section">
-            <img id="main-image" src="/static/images/graph.jpg">
+    <div class="container-fluid d-flex justify-content-between main-block">
+      <div class="text-section">
+          <p class="left landingPageTitle white">Dive into the Stock Market with Confidence!</p>
+          <p class="left landingPageDesc white">Your Gateway to Smart Investing: Discover, Learn, and Succeed with Real-Time Market Insights!</p>
+          <div class="button">
+            <a href="/market" class="get-started-btn">Get Started</a>
           </div>
       </div>
+      <div class="image-section">
+        <img id="main-image" src="/static/images/stocks3.png">
+      </div>
+  </div>
+
+      {% include 'chatbot.html' %}
+   
+      <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+      <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+      <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+      <script>
+          window.onload = function() {
+              var chatContainer = document.getElementById("chat-container");
+              var chatbotToggle = document.getElementById("chatbot-toggle");
+              var chatbotClose = document.getElementById("chatbot-close");
+  
+              chatbotToggle.addEventListener("click", function() {
+                  chatContainer.style.display = "block";
+                  chatbotToggle.style.display = "none";
+              });
+  
+              chatbotClose.addEventListener("click", function() {
+                  chatContainer.style.display = "none";
+                  chatbotToggle.style.display = "block";
+              });
+          };
+  
+          document.getElementById("send-btn").addEventListener("click", function() {
+              var userInput = document.getElementById("user-input").value;
+              if (userInput.trim() === "") return;
+  
+              var chatBox = document.getElementById("chat-box");
+              var timestamp = new Date().toLocaleTimeString();
+  
+              // Add user message to chat box
+              chatBox.innerHTML += '<div class="user-message alert alert-primary" role="alert"><strong>You:</strong> ' + userInput + '<br><small>' + timestamp + '</small></div>';
+  
+              fetch('/chatbot', {
+                  method: 'POST',
+                  headers: {
+                      'Content-Type': 'application/x-www-form-urlencoded',
+                  },
+                  body: 'message=' + encodeURIComponent(userInput)
+              })
+              .then(response => response.json())
+              .then(data => {
+                  var aiResponse = data.response;
+  
+                  // Add AI response to chat box
+                  chatBox.innerHTML += '<div class="ai-message alert alert-warning" role="alert"><strong>AI:</strong> ' + aiResponse + '<br><small>' + timestamp + '</small></div>';
+  
+                  // Clear input field
+                  document.getElementById("user-input").value = '';
+  
+                  // Scroll chat box to the bottom
+                  chatBox.scrollTop = chatBox.scrollHeight;
+              })
+              .catch(error => {
+                  console.error('Error:', error);
+                  chatBox.innerHTML += '<div class="error-message alert alert-danger" role="alert"><strong>Error:</strong> ' + error + '</div>';
+              });
+          });
+      </script>
 </body>
 </html>

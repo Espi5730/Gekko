@@ -21,9 +21,6 @@
         <div class="collapse navbar-collapse right" id="navbarSupportedContent">
           <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
             <li class="nav-item">
-              <a class="nav-link active" aria-current="page" href="/">Home</a>
-            </li>
-            <li class="nav-item">
               <a class="nav-link" href="/market">Current Market</a>
             </li>
             <li class="nav-item">
@@ -33,7 +30,7 @@
               <a class="nav-link" href="/news">News</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/resources">Learn More</a>
+              <a class="nav-link" href="/resources">Resources</a>
             </li>
             <li class="nav-item">
               <a class="nav-link page_indicator" href="/about">About</a>
@@ -46,7 +43,7 @@
     <main class="main-block" >
       <h1>About Us</h1>
       <div id="project-description">
-          <p>Paragraph about us as SEO and EduMarket here</p>
+          <p>MarketMind is an innovative tool created to make the stock market more accessible and less intimidating for college students, particularly those from underrepresented backgrounds. This application offers real-time data, aiding users in better understanding the market. Developed as part of the 2024 SEO Tech Developer program, MarketMind seeks to support a diverse group of students in taking their initial steps into investment.</p>
       </div>
       
       <div class="team-container">
@@ -71,7 +68,7 @@
           <div class="team-member">
               <img src="../static/images/Matthew.jpg" alt="Matthew Espinoza">
               <h3>Matthew Espinoza</h3>
-              <p>Hey all, My name is Matthew Espinoza! I am a triple major at Pacific University where I study Computer Science, Data Science and Mathematics with a specialization in Acturial science. I graduate in May 2026 and I really enjoyed working with these individuals on this AI grader Project.</p>
+              <p>Hey all, My name is Matthew Espinoza! I am a triple major at Pacific University where I study Computer Science, Data Science and Mathematics with a specialization in Acturial science. I graduate in May 2026 and I really enjoyed working with these individuals on that project.</p>
               <div class="social-links">
                   <a href="https://linkedin.com/in/matthewespinoza" target="_blank"><i class="fa fa-linkedin"></i></a>
                   <a href="https://twitter.com/matthewespinoza" target="_blank"><i class="fa fa-twitter"></i></a>
@@ -88,5 +85,64 @@
           </div>
       </div>
     </main>  
+
+    {% include 'chatbot.html' %}
+   
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        window.onload = function() {
+            var chatContainer = document.getElementById("chat-container");
+            var chatbotToggle = document.getElementById("chatbot-toggle");
+            var chatbotClose = document.getElementById("chatbot-close");
+
+            chatbotToggle.addEventListener("click", function() {
+                chatContainer.style.display = "block";
+                chatbotToggle.style.display = "none";
+            });
+
+            chatbotClose.addEventListener("click", function() {
+                chatContainer.style.display = "none";
+                chatbotToggle.style.display = "block";
+            });
+        };
+
+        document.getElementById("send-btn").addEventListener("click", function() {
+            var userInput = document.getElementById("user-input").value;
+            if (userInput.trim() === "") return;
+
+            var chatBox = document.getElementById("chat-box");
+            var timestamp = new Date().toLocaleTimeString();
+
+            // Add user message to chat box
+            chatBox.innerHTML += '<div class="user-message alert alert-primary" role="alert"><strong>You:</strong> ' + userInput + '<br><small>' + timestamp + '</small></div>';
+
+            fetch('/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'message=' + encodeURIComponent(userInput)
+            })
+            .then(response => response.json())
+            .then(data => {
+                var aiResponse = data.response;
+
+                // Add AI response to chat box
+                chatBox.innerHTML += '<div class="ai-message alert alert-warning" role="alert"><strong>AI:</strong> ' + aiResponse + '<br><small>' + timestamp + '</small></div>';
+
+                // Clear input field
+                document.getElementById("user-input").value = '';
+
+                // Scroll chat box to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                chatBox.innerHTML += '<div class="error-message alert alert-danger" role="alert"><strong>Error:</strong> ' + error + '</div>';
+            });
+        });
+    </script>
 </body>
 </html>

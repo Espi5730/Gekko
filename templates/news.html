@@ -30,7 +30,7 @@
             <a class="nav-link page_indicator" href="/news">News</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/resources">Learn More</a>
+            <a class="nav-link" href="/resources"> Resources</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/about">About</a>
@@ -38,7 +38,7 @@
         </ul>
       </div>
     </div>
-</nav>
+  </nav>
 
     <div class="container my-5 text-center">
         <h1>Company News Search</h1>
@@ -58,28 +58,95 @@
     </div>
 
     <script>
-        async function searchArticles() {
+        function searchArticles() {
             const company = document.getElementById('searchInput').value;
-            const response = await fetch(`/get_news?company=${company}`);
-            const articles = await response.json();
-            displayArticles(articles);
+            fetch(`/get_news?company=${company}`)
+                .then(response => response.json())
+                .then(articles => {
+                    displayArticles(articles);
+                })
+                .catch(error => {
+                    console.error('Error fetching articles:', error);
+                    alert('Failed to fetch articles.');
+                });
         }
-
+        
         function displayArticles(articles) {
-            console.log(articles);  // Debugging line to check the data
             const articlesGrid = document.getElementById('articlesGrid');
             articlesGrid.innerHTML = '';
             articles.forEach(article => {
-                const articleDiv = document.createElement('div');
-                articleDiv.className = 'col-md-4 col-sm-6 article';
-                articleDiv.innerHTML = `
-                    <h2><a href="${article.url}" target="_blank" style="text-decoration: none; color: inherit;">${article.name}</a></h2>
-                    <img src="${article.image}" alt="${article.name}" onerror="this.onerror=null;this.src='default-image.png';">
-                    <p>${article.description}</p>
+                const articleRow = document.createElement('div');
+                articleRow.className = 'row mb-3 gradWhite';
+                articleRow.innerHTML = `
+                    <div class="col-md-12">
+                        <div class="card-body">
+                            <h5 class="card-title"><a href="${article.url}" target="_blank" style="text-decoration: none; color: inherit;">${article.name}</a></h5>
+                            <p class="card-text">${article.description}</p>
+                        </div>
+                    </div>
                 `;
-                articlesGrid.appendChild(articleDiv);
+                articlesGrid.appendChild(articleRow);
             });
         }
+    </script>
+    
+    {% include 'chatbot.html' %}
+   
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        window.onload = function() {
+            var chatContainer = document.getElementById("chat-container");
+            var chatbotToggle = document.getElementById("chatbot-toggle");
+            var chatbotClose = document.getElementById("chatbot-close");
+
+            chatbotToggle.addEventListener("click", function() {
+                chatContainer.style.display = "block";
+                chatbotToggle.style.display = "none";
+            });
+
+            chatbotClose.addEventListener("click", function() {
+                chatContainer.style.display = "none";
+                chatbotToggle.style.display = "block";
+            });
+        };
+
+        document.getElementById("send-btn").addEventListener("click", function() {
+            var userInput = document.getElementById("user-input").value;
+            if (userInput.trim() === "") return;
+
+            var chatBox = document.getElementById("chat-box");
+            var timestamp = new Date().toLocaleTimeString();
+
+            // Add user message to chat box
+            chatBox.innerHTML += '<div class="user-message alert alert-primary" role="alert"><strong>You:</strong> ' + userInput + '<br><small>' + timestamp + '</small></div>';
+
+            fetch('/chatbot', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'message=' + encodeURIComponent(userInput)
+            })
+            .then(response => response.json())
+            .then(data => {
+                var aiResponse = data.response;
+
+                // Add AI response to chat box
+                chatBox.innerHTML += '<div class="ai-message alert alert-warning" role="alert"><strong>AI:</strong> ' + aiResponse + '<br><small>' + timestamp + '</small></div>';
+
+                // Clear input field
+                document.getElementById("user-input").value = '';
+
+                // Scroll chat box to the bottom
+                chatBox.scrollTop = chatBox.scrollHeight;
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                chatBox.innerHTML += '<div class="error-message alert alert-danger" role="alert"><strong>Error:</strong> ' + error + '</div>';
+            });
+        });
     </script>
 </body>
 </html>
