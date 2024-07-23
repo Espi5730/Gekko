@@ -91,11 +91,13 @@
             <th>Name</th>
             <th>Price</th>
           </tr>
-          <tr class="stock">
-            <td>{{ ticket }}</td>
-            <td>{{ name }}</td>
-            <td>{{ value }}</td>
-          </tr>
+          {% if ticket %}
+            <tr class="stock">
+              <td>{{ ticket }}</td>
+              <td>{{ name }}</td>
+              <td>{{ value }}</td>
+            </tr>
+          {% endif %}
         </table>
         <form method="POST" action="/portfolio" class="text-section">
           {{ form.hidden_tag() }}
