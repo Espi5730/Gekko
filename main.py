@@ -415,11 +415,20 @@ c.execute('''
 
 #adds the stock onto the personal portfolio db
 def addDatabase(ticket, name, price):
-    c.execute('''
-    INSERT INTO portfolio(ticket, name, price)
-    VALUES (?,?,?)
-    ''',(ticket, name, price)
-    )
+    # Check if the ticket already exists
+    c.execute('SELECT * FROM portfolio WHERE ticket = ?', (ticket,))
+    result = c.fetchone()
+
+    if result:
+        # Ticket already exists
+        # do nothing
+        return
+    else:
+        # New data and new ticket
+        c.execute('''
+        INSERT INTO portfolio(ticket, name, price)
+        VALUES (?, ?, ?)
+        ''', (ticket, name, price))
 
 #Setting up chatBot
 '''
