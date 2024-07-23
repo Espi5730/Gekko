@@ -29,7 +29,7 @@ import matplotlib.dates as mdates
 import plotly.graph_objs as go
 
 
-apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
+apiKey = "P8Fzcp6DjIGHvtIbM52L3YGDvJaD3HkZ"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
 # apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 # subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
@@ -319,10 +319,7 @@ def getCompanyInfo(nameOfCompany):
     try:  
         jsonOfCompanies = stockApiCall(nameOfCompany, 1)
     except:
-        return [" "," "," "]
-
-    print(jsonOfCompanies[0]['name'])
-    print(jsonOfCompanies[0]['name'])
+        return ["","",""]
 
     listOfCompanies = {}
 
@@ -335,7 +332,7 @@ def getCompanyInfo(nameOfCompany):
     # list of companies that match what the user wanted 
 
     if listOfCompanies is None:
-        return [" "," "," "]
+        return ["","",""]
 
     # now we are going to have the user choose what they wanted out of the list
     
@@ -350,11 +347,9 @@ def getCompanyInfo(nameOfCompany):
         print(len(listOfCompanies))
         
         if len(listOfCompanies) < 1:
-            return [" "," "," "]
+            return ["","",""]
         first_key = list(listOfCompanies)[0]
         first_val = list(listOfCompanies.values())[0]
-        print(first_key)
-        print(first_val)
 
         # print(listOfCompanies[nameOfCompany])
 
@@ -425,10 +420,14 @@ def addDatabase(ticket, name, price):
         return
     else:
         # New data and new ticket
-        c.execute('''
-        INSERT INTO portfolio(ticket, name, price)
-        VALUES (?, ?, ?)
-        ''', (ticket, name, price))
+        print("addDatabase")
+        print(len(ticket))
+        if len(ticket) > 0:
+
+            c.execute('''
+            INSERT INTO portfolio(ticket, name, price)
+            VALUES (?, ?, ?)
+            ''', (ticket, name, price))
 
 #Setting up chatBot
 '''
