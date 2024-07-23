@@ -321,8 +321,8 @@ def getCompanyInfo(nameOfCompany):
     except:
         return [" "," "," "]
 
-
-    # print(jsonOfCompanies[0]['name'])
+    print(jsonOfCompanies[0]['name'])
+    print(jsonOfCompanies[0]['name'])
 
     listOfCompanies = {}
 
@@ -530,8 +530,25 @@ def about():
 @app.route('/portfolio', methods=['GET', 'POST'])
 def portfolio():
     global stock_data
+    form = addPortfolio()
+    if form.validate_on_submit():
+        if form.submit.data:
+            # Handle the button click
+            addDatabase(stock_data[0], stock_data[1], stock_data[2])
+            tmp = c.execute('SELECT * FROM portfolio')
+            html = tmp
+            stock_data = ["", "", ""]
+            print("in loop")
+        return render_template('portfolio.html', table=html)
+            
 
+    print("outside area")
+    tmp = c.execute('SELECT * FROM portfolio')
+    html = tmp
+    return render_template('portfolio.html', table=html)
+    
 
+    """
     if stock_data[0] != "": 
         addDatabase(stock_data[0], stock_data[1], stock_data[2])
         tmp = c.execute('SELECT * FROM portfolio')
@@ -548,8 +565,7 @@ def portfolio():
     print("out of loop")
     #print(html)
     #print("after")
-
-    return render_template('portfolio.html', table=html)
+    """
 
 @app.route('/market', methods=['GET', 'POST'])
 def market():
@@ -559,6 +575,7 @@ def market():
     add = addPortfolio()
     search = ""  
     example = ["NVDA", "NVIDIA Corporation", "123.54"]
+    stock_data = example
 
     if request.method == 'POST': 
         user_definition = form.getName()
@@ -599,8 +616,6 @@ def get_news():
         for article in news_data
     ]
     return jsonify(articles)
-
-
 
 
 if __name__ == '__main__':
