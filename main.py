@@ -1,77 +1,105 @@
-from flask import Flask, render_template, request, jsonify
-import requests
+import os
 import re
-from flask import Flask, render_template,jsonify,request, Response
-from flask_behind_proxy import FlaskBehindProxy
-from openai import OpenAI
-from urllib.request import urlopen
-from forms import userPrompt
-from textblob import TextBlob
-import secrets
-import sqlite3
-import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
-import certifi
+import io
 import json
 import requests
-import os
-from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-from matplotlib.figure import Figure
-import io
-import matplotlib
-import PyQt5
+import sqlite3
+import certifi
+import secrets
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
 from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
-import matplotlib.dates as mdates
+from PIL import Image
+from io import BytesIO
+from urllib.request import urlopen
+from bs4 import BeautifulSoup
+from flask import Flask, render_template, request, jsonify, send_file, Response
+from flask_behind_proxy import FlaskBehindProxy
+from textblob import TextBlob
+from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
+from matplotlib.figure import Figure
 from plotly.subplots import make_subplots
 import plotly.graph_objs as go
+from playwright.sync_api import sync_playwright
+from resources import initialize_db, scrape_and_store, get_resources
+from openai import OpenAI
+from forms import userPrompt
+import PyQt5
+from news import newsSearch
 
 app = Flask(__name__)
 
+
+# Initialize the database
+initialize_db()
+# urls for the resources webpage
+urls = [
+    "https://www.synovus.com/personal/resource-center/investing/investing-101-understanding-the-stock-market/",
+    "https://www.bankrate.com/investing/ultimate-guide-virtual-trading-stock-market-simulator/",
+    "https://www.bankrate.com/investing/stock-market-basics-for-beginners/",
+    "https://www.nerdwallet.com/article/investing/stock-market-basics-everything-beginner-investors-know",
+    "https://www.bankrate.com/investing/how-to-read-stock-charts/"
+]
+
+api_key = os.getenv('OPENAI_KEY')
+
+for url in urls:
+    scrape_and_store(url, api_key)
+
 apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
-# apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
-# subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
 
-# functions
+
+# def take_screenshot(url):
+#     with sync_playwright() as p:
+#         browser = p.chromium.launch()
+#         page = browser.new_page()
+#         page.goto(url)
+#         screenshot = page.screenshot(full_page=True)
+#         browser.close()
+#         return screenshot
+
+
 # function to get news
-def newsSearch(searchTerm):
-    search_url = "https://api.bing.microsoft.com/v7.0/news/search"
-    headers = {"Ocp-Apim-Subscription-Key": subscriptionKey}
-    params = {
-        "q": f"{searchTerm} stock market finance",
-        "textDecorations": True,
-        "textFormat": "HTML",
-        "mkt": "en-US",
-        "count": 20  # to get more results and filter later
-    }
+# def newsSearch(searchTerm):
+#     search_url = "https://api.bing.microsoft.com/v7.0/news/search"
+#     headers = {"Ocp-Apim-Subscription-Key": subscriptionKey}
+#     params = {
+#         "q": f"{searchTerm} stock market finance",
+#         "textDecorations": True,
+#         "textFormat": "HTML",
+#         "mkt": "en-US",
+#         "count": 20  # to get more results and filter later
+#     }
 
-    response = requests.get(search_url, headers=headers, params=params)
-    response.raise_for_status()
-    results = response.json()
-    stories = results['value']
+#     response = requests.get(search_url, headers=headers, params=params)
+#     response.raise_for_status()
+#     results = response.json()
+#     stories = results['value']
 
-    def strip_html_tags(text):
-        clean = re.compile('<.*?>')
-        return re.sub(clean, '', text)
+#     def strip_html_tags(text):
+#         clean = re.compile('<.*?>')
+#         return re.sub(clean, '', text)
 
-    resultList = []
-    for story in stories:
-        image_url = story.get('image', {}).get('thumbnail', {}).get('contentUrl', '')
-        # if a larger image URL is available in the API response so we can get a better quality photo
-        if 'contentUrl' in story.get('image', {}):
-            image_url = story['image']['contentUrl']
-        resultList.append({
-            'name': story['name'],
-            'url': story['url'],
-            'image': image_url,
-            'description': strip_html_tags(story['description']),
-            'provider': story['provider'][0]['name'],
-            'date': story['datePublished']
-        })
+#     resultList = []
+#     for story in stories:
+#         image_url = story.get('image', {}).get('thumbnail', {}).get('contentUrl', '')
+#         # if a larger image URL is available in the API response so we can get a better quality photo
+#         if 'contentUrl' in story.get('image', {}):
+#             image_url = story['image']['contentUrl']
+#         resultList.append({
+#             'name': story['name'],
+#             'url': story['url'],
+#             'image': image_url,
+#             'description': strip_html_tags(story['description']),
+#             'provider': story['provider'][0]['name'],
+#             'date': story['datePublished']
+#         })
 
-    return resultList
+#     return resultList
 
 
 
@@ -590,27 +618,55 @@ def market():
     
     return render_template('market.html', form=form,)
     
+def get_resources():
+    conn = sqlite3.connect('resources.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, title, url, summary FROM resources")
+    rows = cursor.fetchall()
+    conn.close()
+    return rows
 
-@app.route('/resources')
-def learn():
-    return render_template("resources.html")
+@app.route('/resources', methods=['GET'])
+def resources():
+    url_summaries = get_resources()
+    return render_template('resources.html', url_summaries=url_summaries)
+
+@app.route('/screenshot/<int:resource_id>')
+def screenshot(resource_id):
+    conn = sqlite3.connect('resources.db')
+    cursor = conn.cursor()
+    cursor.execute("SELECT screenshot FROM resources WHERE id = ?", (resource_id,))
+    row = cursor.fetchone()
+    conn.close()
+    if row and row[0]:
+        return send_file(BytesIO(row[0]), mimetype='image/jpeg')
+    else:
+        return "No image available", 404
 
 
 @app.route('/news')
 def news():
     return render_template('news.html')
 
+# @app.route('/get_news', methods=['GET'])
+# def get_news():
+#     company = request.args.get('company')
+#     news_data = newsSearch(company)
+#     articles = [
+#         {"name": article['name'], "url": article['url'], "image": article['image'], "description": article['description']}
+#         for article in news_data
+#     ]
+#     return jsonify(articles)
+
 @app.route('/get_news', methods=['GET'])
 def get_news():
     company = request.args.get('company')
-    news_data = newsSearch(company)
-    articles = [
-        {"name": article['name'], "url": article['url'], "image": article['image'], "description": article['description']}
-        for article in news_data
-    ]
-    return jsonify(articles)
-
-
+    news_data = newsSearch(subscriptionKey, company)
+    if news_data:
+        articles = [{"name": article['name'], "url": article['url'], "description": article['description']} for article in news_data]
+        return jsonify(articles)
+    else:
+        return jsonify({"error": "Failed to fetch news"}), 500
 
 
 if __name__ == '__main__':
