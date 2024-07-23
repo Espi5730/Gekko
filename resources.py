@@ -23,7 +23,6 @@ def initialize_db():
 def fetch_webpage_content(url):
     response = requests.get(url)
     soup = BeautifulSoup(response.text, 'html.parser')
-    # title = soup.find('title').get_text(strip=True)  
     text = soup.get_text(separator=' ', strip=True)  
     return text
 
@@ -54,15 +53,6 @@ def summarize_with_chatgpt(text, api_key):
         print("Unexpected JSON structure in the response.")
         print("JSON Response:", response.json())
         return "Error in summarizing content"
-
-# def take_screenshot(url):
-#     with sync_playwright() as playwright:
-#         browser = playwright.chromium.launch(headless=True)
-#         page = browser.new_page()
-#         page.goto(url)
-#         screenshot = page.screenshot(full_page=False)
-#         browser.close()
-#         return screenshot
 
 def take_screenshot(url):
     with sync_playwright() as playwright:
