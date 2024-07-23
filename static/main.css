@@ -211,7 +211,6 @@ td {
     max-width: 50%;
 }
 
-
 .no-left {
     padding-left: 0px;
 }
@@ -537,3 +536,39 @@ td {
     color: white;
 }
 
+
+#full-width-image {
+    width: 100%;        /* Make the image take the full width of its container */
+    height: auto;       /* Adjust the height automatically */
+    position: absolute; /* Position the image absolutely within a relative container */
+    bottom: 0;          /* Align the image to the bottom of the container */
+    right: 0;           /* Align the image to the right of the container */
+    object-fit: cover;  /* Cover the area without losing aspect ratio */
+}
+.clickable-row {
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out, box-shadow 0.3s ease;
+}
+
+.clickable-row:hover {
+    transform: scale(1.01);  /* Slightly scale up the row on hover */
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);  /* Add shadow for 3D effect */
+}
+
+.stretched-link::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+}
+
+.clickable-row a, .clickable-row a:hover, .clickable-row a:visited, .clickable-row a:focus {
+    text-decoration: none;  /* Removes underline from normal and hover states */
+    color: inherit;  /* Ensures text color remains consistent */
+}
+
+.card-title, .card-text {
+    color: #333; /* Set a specific color for text if needed */
+}
