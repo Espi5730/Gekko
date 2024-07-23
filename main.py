@@ -54,6 +54,8 @@ for url in urls:
 apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
 
+stock_data = ["", "", ""]
+
 # function to get price change
 def getPriceChange(stockSymbol):
 

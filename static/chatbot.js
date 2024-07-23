@@ -33,3 +33,4 @@ document.getElementById("send-btn").addEventListener("click", function() {
         chatBox.innerHTML += '<div class="error-message" style="color: red; padding: 5px; margin-bottom: 5px;"><strong>Error:</strong> ' + error + '</div>';
     });
 });
+
