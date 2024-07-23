@@ -25,7 +25,9 @@ from plotly.subplots import make_subplots
 import plotly.graph_objs as go
 from playwright.sync_api import sync_playwright
 from resources import initialize_db, scrape_and_store, get_resources
-import openai
+from openai import OpenAI
+
+client = OpenAI(api_key=my_api_key)
 from forms import userPrompt
 import PyQt5
 from news import newsSearch
@@ -172,7 +174,6 @@ def addDatabase(name, price, changeInPrice):
 
 # Setting up chatBot
 my_api_key = os.getenv('OPENAI_KEY')
-openai.api_key = my_api_key
 
 app = Flask(__name__)
 key = secrets.token_hex(16)
@@ -244,14 +245,12 @@ def get_news():
 def chat_bot():
     user_message = request.form['message']
     try:
-        response = openai.ChatCompletion.create(
-            model="gpt-3.5-turbo",
-            messages=[
-                {"role": "system", "content": "You are a helpful assistant."},
-                {"role": "user", "content": user_message}
-            ]
-        )
-        ai_response = response['choices'][0]['message']['content']
+        response = client.chat.completions.create(model="gpt-3.5-turbo",
+        messages=[
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": user_message}
+        ])
+        ai_response = response.choices[0].message.content
         return jsonify({'response': ai_response})
     except Exception as e:
         return jsonify({'response': str(e)})

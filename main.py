@@ -30,7 +30,10 @@ from resources import initialize_db, scrape_and_store, get_resources
 from forms import userPrompt
 import PyQt5
 from news import newsSearch
+# from openai import OpenAI
 import openai
+
+# client = OpenAI(api_key=my_api_key)
 from add import addPortfolio
 
 app = Flask(__name__)
@@ -65,21 +68,21 @@ def getPriceChange(stockSymbol):
     response = urlopen(companyPriceURL, cafile=certifi.where())
 
     data = response.read().decode("utf-8")
-    
+
     jsonOfCompanies = json.loads(data)
-    
+
     return jsonOfCompanies
 
 # function to get all company names
 def getAllCompanies():
     companySearchUrl = (f'https://financialmodelingprep.com/api/v3/stock/list?apikey={apiKey}')
-        
+
     response = urlopen(companySearchUrl, cafile=certifi.where())
-    
+
     data = response.read().decode("utf-8")
-    
+
     jsonOfCompanies = json.loads(data)
-    
+
     return jsonOfCompanies
 
 # function to search for news on a company 
@@ -104,7 +107,7 @@ def getAllCompanies():
 #     for story in stories:
 
 #         resultList.append( { 'name' : story['name'], 'url' : story['url'], 'image' : story['image']['thumbnail']['contentUrl'], 'description' : story['description'], 'provider' : story['provider'][0]['name'], 'data' : story['datePublished']} )
-    
+
 #     # print(resultList[0])
 
 #     return resultList
@@ -112,7 +115,7 @@ def getAllCompanies():
 
     # search_results = json.dumps(response.json())
 
-   
+
     # pprint.pp(search_results[0])
 
 # # function to analyze the sentiment of the aritcle
@@ -145,32 +148,32 @@ def stockApiCall(nameOfCompany, option):
         # use api to return a list of company names that match the name 
 
         generalSearchUrl = (f'https://financialmodelingprep.com/api/v3/search?query={nameOfCompany}&limit=3&&apikey={apiKey}')
-        
+
         # turn the request into json format
 
         response = urlopen(generalSearchUrl, cafile=certifi.where())
-       
+
         data = response.read().decode("utf-8")
-       
+
         jsonOfCompanies = json.loads(data)
-        
+
         return jsonOfCompanies
-    
+
     elif option == 2:
         # use api to return a list of company profiles that match the name 
-       
+
         companyProfileUrl = (f'https://financialmodelingprep.com/api/v3/profile/{nameOfCompany}?apikey={apiKey}')
-        
+
         # turn the request into json format
 
         response = urlopen(companyProfileUrl, cafile=certifi.where())
-        
+
         data = response.read().decode("utf-8")
-        
+
         jsonOfCompanies = json.loads(data)
-        
+
         return jsonOfCompanies
-    
+
     elif option == 3:
 
         # Get today's date
@@ -192,13 +195,13 @@ def stockApiCall(nameOfCompany, option):
         # turn the request into json format
 
         response = urlopen(companyHistoryPriceUrl, cafile=certifi.where())
-        
+
         data = response.read().decode("utf-8")
-        
+
         jsonOfCompanies = json.loads(data)
-        
+
         return jsonOfCompanies
-    
+
 
 
 # function to make line graph from the time and quotes of a company
@@ -241,7 +244,7 @@ def graphData(independant, dependant, symbolName, prices, companyName):
 
     fig = make_subplots(rows=1, cols=1)
     fig.add_trace(go.Scatter(x=x, y=y, mode='lines', line=dict(color=line_color), name=f"{companyName}'s Prices"))
-    
+
     # fig.update_xaxes(title_text="Dates", tickformat="%Y-%m-%d", dtick="86400000.0*2", tickangle=45)
     fig.update_xaxes(
         title_text="Dates",
@@ -271,7 +274,7 @@ def graphData(independant, dependant, symbolName, prices, companyName):
     # plt.xlabel("Dates")  # add X-axis label
     # plt.ylabel("Prices")  # add Y-axis label
     # plt.title(f"{companyName}'s prices")  # add title
-   
+
 
     # plt.show()
 
@@ -292,7 +295,7 @@ def graphData(independant, dependant, symbolName, prices, companyName):
     graph_html = fig.to_html(full_html=False, include_plotlyjs='cdn')
     return f'<div style="width:50%;">{graph_html}</div>'
 
-    
+
 # function to find stock information on comapny
 def getCompanyInfo(nameOfCompany):
 
@@ -309,7 +312,7 @@ def getCompanyInfo(nameOfCompany):
     listOfCompanies = {}
 
     for companyDict in jsonOfCompanies:
-       
+
         resultName = companyDict['name']
         if resultName not in listOfCompanies:
             listOfCompanies[resultName] = companyDict['symbol']
@@ -321,7 +324,7 @@ def getCompanyInfo(nameOfCompany):
         return [" "," "," "]
 
     # now we are going to have the user choose what they wanted out of the list
-    
+
 
     if listOfCompanies is None:
         # edge case if the user picks something random
@@ -333,16 +336,16 @@ def getCompanyInfo(nameOfCompany):
 
         print(listOfCompanies)
         if len(listOfCompanies) < 1:
-             
+
              return ["","",""]
-        
+
         first_key = list(listOfCompanies)[0]
         first_val = list(listOfCompanies.values())[0]
         print(first_key)
         print(first_val)
 
         # print(listOfCompanies[nameOfCompany])
-        
+
         companySymbol = listOfCompanies[first_key]
 
         companyProfile = stockApiCall(companySymbol, 2)
@@ -361,7 +364,7 @@ def getCompanyInfo(nameOfCompany):
         returnVal = [companySymbol, first_key, currentPrice]
 
         return returnVal
-    
+
         # print(quoteJson[0])
         # turn into a dataframe
         # df = pd.json_normalize(quoteJson)
@@ -379,7 +382,7 @@ def name_to_graph(companySymbol):
     changeInPrice = getPriceChange(companySymbol)
 
     profileJson = stockApiCall(companySymbol, 1)
-    
+
     profileDF = pd.json_normalize(profileJson)
 
     # print(profileDF)
@@ -474,7 +477,7 @@ def chatBot():
 #     )
 
 #     return completion.choices[0].message.content
-  
+
 
 #Creating a chatbot response function. Gets the message from a request form from the frontend and 
 #responds to the user input 
@@ -553,7 +556,7 @@ def portfolio():
             stock_data = ["", "", ""]
             print("in loop")
         return render_template('portfolio.html', table=html)
-            
+
 
     print("outside area")
     tmp = c.execute('SELECT * FROM portfolio')
@@ -596,23 +599,23 @@ def market():
 
     search = ""  
 
-   
+
     if request.method == 'POST': 
         user_requested_company = form.getName()
-        
+
         # print(user_requested_company)
         if len(user_requested_company) > 0 :
 
 
             stock_data = getCompanyInfo(user_requested_company)
             plot_html = name_to_graph(user_requested_company)
-            return render_template('market.html', form=form, word=user_requested_company, add = add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
-            
+            return render_template('market.html', form=form, word=user_requested_company, add = add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2], plot_html = plot_html)
+
             # url = "../static/images/new_plot.png"
-            
-    
+
+
     return render_template('market.html', form=form, add = add)
-    
+
 def get_resources():
     conn = sqlite3.connect('resources.db')
     cursor = conn.cursor()
