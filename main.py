@@ -26,6 +26,7 @@ from dateutil.relativedelta import relativedelta
 import matplotlib.dates as mdates
 from plotly.subplots import make_subplots
 import plotly.graph_objs as go
+from add import addPortfolio
 
 app = Flask(__name__)
 
@@ -33,6 +34,9 @@ apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
 # apiKey="D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
 # subcriptionKey="f3f0023662b94a9cbfefa2b60472122e"
+
+#validators
+stock_data = ["", "", ""]
 
 # functions
 # function to get news
@@ -314,6 +318,12 @@ def graphData(independant, dependant, symbolName, prices, companyName):
 # function to find stock information on comapny
 def getCompanyInfo(nameOfCompany):
 
+    returnVal = ["", "", ""]
+    try:  
+        jsonOfCompanies = stockApiCall(nameOfCompany, 1)
+    except:
+        return [" "," "," "]
+
     jsonOfCompanies = stockApiCall(nameOfCompany, 1)
 
     # print(jsonOfCompanies[0]['name'])
@@ -329,11 +339,13 @@ def getCompanyInfo(nameOfCompany):
     # list of companies that match what the user wanted 
     print(listOfCompanies)
 
+    if listOfCompanies is None:
+        return [" "," "," "]
+
     # now we are going to have the user choose what they wanted out of the list
     
-    nameOfCompany = input("Pick one from the names provided \n")
 
-    if nameOfCompany not in listOfCompanies:
+    if listOfCompanies is None:
         # edge case if the user picks something random
 
         print("bruh lock in")
@@ -341,11 +353,21 @@ def getCompanyInfo(nameOfCompany):
         return
     else:
 
-        # print(listOfCompanies[nameOfCompany])
+        print(listOfCompanies)
+        first_key = list(listOfCompanies)[0]
+        first_val = list(listOfCompanies.values())[0]
+        print(first_key)
+        print(first_val)
 
-        companySymbol = listOfCompanies[nameOfCompany]
+        # print(listOfCompanies[nameOfCompany])
+        
+        companySymbol = listOfCompanies[first_key]
 
         companyProfile = stockApiCall(companySymbol, 2)
+
+        # companySymbol = listOfCompanies[nameOfCompany]
+
+        # companyProfile = stockApiCall(companySymbol, 2)
 
         currentPrice = companyProfile[0]['price']
 
@@ -353,17 +375,20 @@ def getCompanyInfo(nameOfCompany):
         print(f'the price of {companySymbol} is {currentPrice}')
 
         # retreiving quote from a certain time
-        quoteJson = stockApiCall(companySymbol, 3)
+        # quoteJson = stockApiCall(companySymbol, 3)
+        returnVal = [companySymbol, first_key, currentPrice]
 
+        return returnVal
+    
         # print(quoteJson[0])
         # turn into a dataframe
-        df = pd.json_normalize(quoteJson)
+        # df = pd.json_normalize(quoteJson)
 
         # print dataframe
         # print(df.loc['date'])
 
         # graph the data
-        graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
+        # graphData(df['date'].head(5),df['open'].head(5), nameOfCompany)
 
 # a function to return a graph to a page based on the word that was searched
 def name_to_graph(companySymbol):
@@ -407,11 +432,11 @@ c.execute('''
 ''')
 
 #adds the stock onto the personal portfolio db
-def addDatabase(name,price,changeInPrice):
+def addDatabase(ticket, name, price):
     c.execute('''
-    INSERT INTO portfolio(name,price,changeInPrice),
+    INSERT INTO portfolio(ticket, name, price)
     VALUES (?,?,?)
-    ''',(name,price,changeInPrice)
+    ''',(ticket, name, price)
     )
 
 #Setting up chatBot
@@ -524,7 +549,28 @@ def about():
 
 @app.route('/portfolio')
 def portfolio():
-    return render_template('portfolio.html')
+
+    global stock_data
+
+    if stock_data[0] != "": 
+        addDatabase(stock_data[0], stock_data[1], stock_data[2])
+        tmp = c.execute('SELECT * FROM portfolio')
+        html = tmp
+        stock_data = ["", "", ""]
+        print("in loop")
+
+        return render_template('portfolio.html', table=html)
+    
+    #addDatabase(stock_data[0], stock_data[1], stock_data[2])
+    tmp = c.execute('SELECT * FROM portfolio')
+    html = tmp
+
+    print("out of loop")
+    #print(html)
+    #print("after")
+
+    return render_template('portfolio.html', table=html)
+
 """
     form = userPrompt()
 
@@ -554,7 +600,10 @@ def market():
     Caught in a loop with no ***** ending, I love CS
     - Matthew
     """
+
+    
     form = userPrompt()
+    add = addPortfolio()
 
     search = ""  
 
@@ -582,13 +631,15 @@ def market():
         # print(user_requested_company)
         if len(user_requested_company) > 0 :
 
+
+            stock_data = getCompanyInfo(user_requested_company)
             plot_html = name_to_graph(user_requested_company)
-            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html)
+            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html, add = add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
             
             # url = "../static/images/new_plot.png"
             
     
-    return render_template('market.html', form=form,)
+    return render_template('market.html', form=form, add = add)
     
 
 @app.route('/resources')
