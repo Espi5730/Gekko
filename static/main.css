@@ -572,3 +572,7 @@ td {
 .card-title, .card-text {
     color: #333; /* Set a specific color for text if needed */
 }
+
+#input-button1{
+    width: 150px;
+}

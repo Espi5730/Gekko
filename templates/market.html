@@ -82,7 +82,6 @@
 
       <!-- table -->
       <div class="text-section no-right" id="full">
-        <p> A table should go here that shows the users ticket search</p>
         <table>
           <tr>
             <th>Symbol</th>
@@ -96,15 +95,15 @@
           </tr>
         </table>
         <form method="POST" action="/portfolio" class="text-section">
-          <div class="form-group">
-            <div class="input-container">
-              <div class="form-group button-group center">
-                <!-- shouldnt this be add -->
-                {{ form.submit(id="input-button", class="btn") }}
+          {{ form.hidden_tag() }}
+            <div class="form-group">
+              <div class="main-block">
+                <div class="form-group button-group center">
+                  {{ add.submit(id="input-button1", class="btn") }}
+                </div>
               </div>
             </div>
-          </div>
-        </form>
+          </form>
       </div>
     </div>  
     {% include 'chatbot.html' %}

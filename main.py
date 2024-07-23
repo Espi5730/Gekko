@@ -8,6 +8,7 @@ import certifi
 import secrets
 import pandas as pd
 import numpy as np
+import matplotlib
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import datetime, timedelta
@@ -34,6 +35,8 @@ from add import addPortfolio
 
 app = Flask(__name__)
 
+#validators
+stock_data = ["", "", ""]
 
 # Initialize the database
 initialize_db()
@@ -51,7 +54,7 @@ api_key = os.getenv('OPENAI_KEY')
 for url in urls:
     scrape_and_store(url, api_key)
 
-apiKey = "D5TvzaGcYfx4GOxOn834UD9QxCAyhEAH"
+apiKey = "P8Fzcp6DjIGHvtIbM52L3YGDvJaD3HkZ"
 subscriptionKey = "f3f0023662b94a9cbfefa2b60472122e"
 
 # function to get price change
@@ -329,6 +332,10 @@ def getCompanyInfo(nameOfCompany):
     else:
 
         print(listOfCompanies)
+        if len(listOfCompanies) < 1:
+             
+             return ["","",""]
+        
         first_key = list(listOfCompanies)[0]
         first_val = list(listOfCompanies.values())[0]
         print(first_key)
@@ -398,21 +405,34 @@ def name_to_graph(companySymbol):
 conn=sqlite3.connect('personal-portfolio.db',check_same_thread=False)
 c=conn.cursor()
 c.execute('''
-    CREATE TABLE IF NOT EXISTS portfolio (
-    id Integer PRIMARY KEY,
-    name TEXT NOT NULL,
-    price Integer,
-    changeInPrice Integer
-    )
-''')
+     CREATE TABLE IF NOT EXISTS portfolio (
+     id Integer PRIMARY KEY,
+     ticket TEXT NOT NULL,
+     name TEXT NOT NULL,
+     price Integer
+     )
+ ''')
 
 #adds the stock onto the personal portfolio db
 def addDatabase(ticket, name, price):
-    c.execute('''
-    INSERT INTO portfolio(ticket, name, price)
-    VALUES (?,?,?)
-    ''',(ticket, name, price)
-    )
+     # Check if the ticket already exists
+     c.execute('SELECT * FROM portfolio WHERE ticket = ?', (ticket,))
+     result = c.fetchone()
+
+     if result:
+         # Ticket already exists
+         # do nothing
+         return
+     else:
+         # New data and new ticket
+         print("addDatabase")
+         print(len(ticket))
+         if len(ticket) > 0:
+
+             c.execute('''
+             INSERT INTO portfolio(ticket, name, price)
+             VALUES (?, ?, ?)
+             ''', (ticket, name, price))
 
 #Setting up chatBot
 '''
@@ -523,24 +543,21 @@ def about():
 def portfolio():
 
     global stock_data
-
-    if stock_data[0] != "": 
-        addDatabase(stock_data[0], stock_data[1], stock_data[2])
-        tmp = c.execute('SELECT * FROM portfolio')
-        html = tmp
-        stock_data = ["", "", ""]
-        print("in loop")
-
+    form = addPortfolio()
+    if form.validate_on_submit():
+        if form.submit.data:
+            # Handle the button click
+            addDatabase(stock_data[0], stock_data[1], stock_data[2])
+            tmp = c.execute('SELECT * FROM portfolio')
+            html = tmp
+            stock_data = ["", "", ""]
+            print("in loop")
         return render_template('portfolio.html', table=html)
-    
-    #addDatabase(stock_data[0], stock_data[1], stock_data[2])
+            
+
+    print("outside area")
     tmp = c.execute('SELECT * FROM portfolio')
     html = tmp
-
-    print("out of loop")
-    #print(html)
-    #print("after")
-
     return render_template('portfolio.html', table=html)
 
 """
@@ -573,30 +590,13 @@ def market():
     - Matthew
     """
 
-    
+    global stock_data
     form = userPrompt()
     add = addPortfolio()
 
     search = ""  
 
-    # autocomplete?
-
-    # jsonOfCompanies = getAllCompanies()
-
-    # print(jsonOfCompanies[0]['name'])
-
-    # listOfCompanies = {}
-
-    # for companyDict in jsonOfCompanies:
-       
-    #     resultName = companyDict['name']
-    #     if resultName not in listOfCompanies:
-    #         listOfCompanies[resultName] = companyDict['symbol']
-
-    # # print(listOfCompanies["Perth Mint Gold"])
-
-    # data = listOfCompanies.items()
-
+   
     if request.method == 'POST': 
         user_requested_company = form.getName()
         
