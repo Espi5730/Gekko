@@ -162,7 +162,7 @@ td {
 .landingPageDesc {
     /* font-size: 20px; */
     font-family: "Poppins";
-    /* line-height: 20px; */
+    line-height: 20px;
 }
 
 .right {
@@ -386,10 +386,11 @@ td {
 .input-container {
     display: flex;
     align-items: center;
-    border: 1px solid #ccc;
+    /* border: 1px solid #ccc; */
     border-radius: 4px;
-    padding: 5px;
+    /* padding: 5px; */
     width: auto;
+    margin-top: 10px;
 }
 
 .input-container input {
@@ -532,6 +533,8 @@ td {
 .btn {
     background-color: #42ABEF;
     color: white;
+    margin-left: 15px;
+    width: 100px;
 }
 
 #full-width-image {

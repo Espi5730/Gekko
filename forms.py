@@ -7,7 +7,7 @@ class userPrompt(FlaskForm):
     companyName = StringField('companyName',
                              validators=[DataRequired()])
 
-    submit = SubmitField('Submit')
+    submit = SubmitField('Search')
 
     def getName(self):
         return self.companyName.data
