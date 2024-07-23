@@ -91,24 +91,25 @@
         <table>
           <tr>
             <th>Symbol</th>
+            <th>Name</th>
             <th>Price</th>
-            <th>Other Data</th>
-            <th>Other Data</th>
-            <th>Other Data</th>
           </tr>
           <tr class="stock">
-            <td>
-              <div class="symbol">
-                <p class="no-bottom"> {{ word }}</p>
-                <p class="no-bottom">NVIDIA CORPORATION COM</p>
-              </div>
-            </td>
-            <td>121.09</td>
-            <td>ticket Data</td>
-            <td>ticket Data</td>
-            <td>ticket Data</td>
+            <td>{{ ticket }}</td>
+            <td>{{ name }}</td>
+            <td>{{ value }}</td>
           </tr>
         </table>
+        <form method="POST" action="/portfolio" class="text-section">
+          <div class="form-group">
+            <div class="input-container">
+              <div class="form-group button-group center">
+                <!-- shouldnt this be add -->
+                {{ form.submit(id="input-button", class="btn") }}
+              </div>
+            </div>
+          </div>
+        </form>
       </div>
     </div>  
 
