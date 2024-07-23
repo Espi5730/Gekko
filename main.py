@@ -558,6 +558,7 @@ def market():
     form = userPrompt()
     add = addPortfolio()
     search = ""  
+    example = ["NVDA", "NVIDIA Corporation", "123.54"]
 
     if request.method == 'POST': 
         user_definition = form.getName()
@@ -577,7 +578,7 @@ def market():
             #display api results on page
             return render_template('market.html', form=form, add=add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
 
-    return render_template('market.html', form=form, add=add)
+    return render_template('market.html', form=form, add=add, ticket=example[0], name=example[1], value=example[2])
     
 
 @app.route('/resources')

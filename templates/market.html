@@ -66,13 +66,11 @@
 
         <div class="display-graph center">
           <img id="full" src="/static/images/200w.gif">
-          <p class="footnote">placeholder image and placeholder text</p>
         </div>
       </div>
 
       <!-- table -->
       <div class="text-section no-right" id="full">
-        <p> A table should go here that shows the users ticket search</p>
         <table>
           <tr>
             <th>Symbol</th>
@@ -89,7 +87,7 @@
         <form method="POST" action="/portfolio" class="text-section">
         {{ form.hidden_tag() }}
           <div class="form-group">
-            <div class="input-container">
+            <div class="main-block">
               <div class="form-group button-group center">
                 {{ add.submit(id="input-button", class="btn") }}
               </div>
