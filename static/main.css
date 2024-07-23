@@ -383,8 +383,6 @@ td {
     
 }
 
-
-
 .input-container {
     display: flex;
     align-items: center;
@@ -535,7 +533,6 @@ td {
     background-color: #42ABEF;
     color: white;
 }
-
 
 #full-width-image {
     width: 100%;        /* Make the image take the full width of its container */
