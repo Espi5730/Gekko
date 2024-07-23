@@ -208,7 +208,7 @@ def stockApiCall(nameOfCompany, option):
 def graphData(independant, dependant, symbolName, prices, companyName):
 
     # print(f"PRICES ARE {prices}")
-    matplotlib.use('qtagg')
+    # matplotlib.use('qtagg')
 
     plt.clf()
 
