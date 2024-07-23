@@ -539,7 +539,7 @@ def home():
 def about():
     return render_template('about.html')
 
-@app.route('/portfolio')
+@app.route('/portfolio', methods=['GET', 'POST'])
 def portfolio():
 
     global stock_data
@@ -606,7 +606,7 @@ def market():
 
             stock_data = getCompanyInfo(user_requested_company)
             plot_html = name_to_graph(user_requested_company)
-            return render_template('market.html', form=form, word=user_requested_company, plot_html = plot_html, add = add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
+            return render_template('market.html', form=form, word=user_requested_company, add = add, ticket=stock_data[0], name=stock_data[1], value=stock_data[2])
             
             # url = "../static/images/new_plot.png"
             
@@ -673,4 +673,4 @@ def chat_bot():
         return jsonify({'response': str(e)})
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0", port=5001)
+    app.run(debug=True,host="0.0.0.0", port=7000)
