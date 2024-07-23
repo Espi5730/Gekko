@@ -457,12 +457,12 @@ def chatBot():
     print(completion.choices[0].message.content) 
 '''
 
-my_api_key=('OPENAI_KEY')
+my_api_key= os.getenv('OPENAI_KEY')
 client=OpenAI(
     api_key=my_api_key
 )
 
-#Creating a chatbot response function. Gets the message from a request form from the frontend and 
+#Creating atbot response function. Gets the message from a request form from the frontend and 
 #responds to the user input 
 # @app.route('/chatbot',methods=['POST'])
 # def chatBot():
@@ -481,34 +481,28 @@ client=OpenAI(
 #     return completion.choices[0].message.content
   
 
-#Creating a chatbot response function. Gets the message from a request form from the frontend and 
-#responds to the user input 
+# Creating a chatbot response function. Gets the message from a request form from the frontend and 
+# responds to the user input 
 
-# @app.route('/chatbot', methods=['POST'])
-# def chatBot():
-#     my_api_key = os.getenv('OPENAI_KEY')
+@app.route('/chatbot', methods=['POST'])
+def chatBot():
+    try:
+            message = request.form.get("message")
+            print(f"Received message: {message}")  # Debugging statement
 
-#     client = OpenAI(
-#         api_key=my_api_key,
-#     )
+            # Create a chat completion
+            completion = client.chat.completions.create(model="gpt-3.5-turbo",
+            messages=[
+                {"role": "user", "content": message}
+            ])
 
-#     try:
-#             message = request.form.get("message")
-#             print(f"Received message: {message}")  # Debugging statement
+            ai_response = completion.choices[0].message.content.strip()
+            print(f"AI Response: {ai_response}")  # Debugging statement
 
-#             # Create a chat completion
-#             completion = client.chat.completions.create(model="gpt-3.5-turbo",
-#             messages=[
-#                 {"role": "user", "content": message}
-#             ])
-
-#             ai_response = completion.choices[0].message.content.strip()
-#             print(f"AI Response: {ai_response}")  # Debugging statement
-
-#             return jsonify({"response": ai_response})
-#     except Exception as e:
-#             print(f"Error: {e}")
-#             return jsonify({"response": "Sorry, I didn't understand that."})
+            return jsonify({"response": ai_response})
+    except Exception as e:
+            print(f"Error: {e}")
+            return jsonify({"response": "Sorry, I didn't understand that."})
 
 # getCompanyInfo()
 
@@ -665,4 +659,4 @@ def get_news():
 
 
 if __name__ == '__main__':
-    app.run(debug=True,host="0.0.0.0", port=5001)
+    app.run(debug=True,host="0.0.0.0", port=5000)
