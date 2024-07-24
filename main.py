@@ -377,7 +377,14 @@ def getCompanyInfo(nameOfCompany):
 
 # a function to return a graph to a page based on the word that was searched
 def name_to_graph(companySymbol):
+    # returnVal = ["", "", ""]
+
     quoteJson = stockApiCall(companySymbol, 3)
+   
+    if len(quoteJson) < 1:
+        return None
+
+
 
     changeInPrice = getPriceChange(companySymbol)
 
